@@ -13,7 +13,7 @@ struct Token {
     let endIndex: AttributedString.Index
 
     var description: String {
-        return "(\(value)) \(startIndex)..<\(endIndex)"
+        "(\(value)) \(startIndex)..<\(endIndex)"
     }
 
     var indexRange: any RangeExpression<AttributedString.Index> {

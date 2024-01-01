@@ -18,36 +18,36 @@ struct MemoryTextView: View {
     }
     
     var body: some View {
-        NavigationStack {
-            VStack {
+        VStack {
+            ScrollView {
                 Text(vm.displayText)
                     .font(.body)
                     .padding()
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-                    .background(Color.gray.opacity(0.1))
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
-                Spacer()
-                Button(action: { handleDictationButtonTap() }) {
-                    Text(speechRecognizer.isTranscribing ? "Stop Dictation" : "Start Dictation")
-                        .font(.title)
-                        .foregroundStyle(.white)
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 60)
-                        .background(speechRecognizer.isTranscribing ? Color.red : Color.green)
-                }
-                .clipShape(RoundedRectangle(cornerRadius: 12))
-                .padding(.top, 12)
             }
-            .padding()
-            .navigationTitle("Dictation")
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: { isShowingEditView = true }) {
-                        NavigationLink {
-                            AddEditTextView(text: vm.masterText)
-                        } label: {
-                            Text("Edit")
-                        }
+            .background(Color.gray.opacity(0.1))
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+            Spacer()
+            Button(action: { handleDictationButtonTap() }) {
+                Text(speechRecognizer.isTranscribing ? "Stop Dictation" : "Start Dictation")
+                    .font(.title)
+                    .foregroundStyle(.white)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 60)
+                    .background(speechRecognizer.isTranscribing ? Color.red : Color.green)
+            }
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .padding(.top, 12)
+        }
+        .padding()
+        .navigationTitle(vm.masterText.title)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button(action: { isShowingEditView = true }) {
+                    NavigationLink {
+                        AddEditTextView(vm: vm.addEditViewModel)
+                    } label: {
+                        Text("Edit")
                     }
                 }
             }
@@ -60,7 +60,7 @@ struct MemoryTextView: View {
         if speechRecognizer.isTranscribing {
             vm.stopListening()
         } else {
-            vm.evaluteSpokenInput()
+            vm.handleSpokenInput()
         }
     }
 }

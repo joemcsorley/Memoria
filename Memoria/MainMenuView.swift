@@ -11,16 +11,13 @@ import SwiftData
 struct MainMenuView: View {
     @Environment(\.modelContext) private var modelContext
     @Query private var texts: [MemoryText]
+    @State private var isAddEditTextViewPresented = false
 
     var body: some View {
         NavigationStack {
             List {
                 ForEach(texts) { text in
-                    NavigationLink {
-                        let speechRecognizer = SpeechRecognizer()
-                        let memoryTextViewModel = MemoryTextViewModel(text: text, speechRecognizer: speechRecognizer)
-                        MemoryTextView(memoryTextViewModel, speechRecognizer: speechRecognizer)
-                    } label: {
+                    NavigationLink(value: text) {
                         Text(text.title)
                     }
                 }
@@ -37,13 +34,20 @@ struct MainMenuView: View {
                     }
                 }
             }
+            .navigationDestination(for: MemoryText.self) { text in
+                let speechRecognizer = SpeechRecognizer()
+                let memoryTextViewModel = MemoryTextViewModel(text: text, speechRecognizer: speechRecognizer)
+                MemoryTextView(memoryTextViewModel, speechRecognizer: speechRecognizer)
+            }
+            .navigationDestination(isPresented: $isAddEditTextViewPresented) {
+                AddEditTextView(vm: AddEditTextViewModel())
+            }
         }
     }
 
     private func addNewRow() {
         withAnimation {
-            let newText = MemoryText(title: "", text: "")
-            modelContext.insert(newText)
+            isAddEditTextViewPresented = true
         }
     }
 

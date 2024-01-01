@@ -13,7 +13,7 @@ struct RangePair {
     var isMatched: Bool = false
 
     var description: String {
-        return "Master range: \(masterRange), candidate range: \(candidateRange), isMatched = \(isMatched)"
+        "Master range: \(masterRange), candidate range: \(candidateRange), isMatched = \(isMatched)"
     }
 
     var masterStartIndex: Int {
