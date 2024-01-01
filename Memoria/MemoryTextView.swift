@@ -29,7 +29,7 @@ struct MemoryTextView: View {
             .clipShape(RoundedRectangle(cornerRadius: 12))
             Spacer()
             Button(action: { handleDictationButtonTap() }) {
-                Text(speechRecognizer.isTranscribing ? "Stop Dictation" : "Start Dictation")
+                Text(vm.dictationButtonTitle)
                     .font(.title)
                     .foregroundStyle(.white)
                     .frame(maxWidth: .infinity)
@@ -51,11 +51,16 @@ struct MemoryTextView: View {
                     }
                 }
             }
+            ToolbarItem {
+                Button(action: { vm.clearText() }) {
+                    Text("Clear")
+                }
+            }
         }
     }
     
     // MARK: - Helpers
-    
+
     private func handleDictationButtonTap() {
         if speechRecognizer.isTranscribing {
             vm.stopListening()

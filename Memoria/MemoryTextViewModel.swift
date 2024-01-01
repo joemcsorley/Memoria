@@ -37,8 +37,7 @@ class MemoryTextViewModel: NSObject, ObservableObject {
                     if transcript.startTimeStamp != nil {
                         self?.transcripts.append(transcript.transcript)
                     } else {
-                        self?.displayText = ""
-                        self?.transcripts.forEach { self?.displayText += AttributedString($0) + "\n" }
+                        self?.refreshDisplayTextFromTranscripts()
                         self?.displayText += AttributedString(transcript.transcript)
                     }
                 }
@@ -57,10 +56,15 @@ class MemoryTextViewModel: NSObject, ObservableObject {
                 .store(in: &spokenInputCancellables)
         }
         
-        transcripts = []
-        displayText = ""
+        refreshDisplayTextFromTranscripts()
         speechRecognizer.resetTranscript()
         speechRecognizer.startTranscribing()
+    }
+    
+    @MainActor
+    func clearText() {
+        transcripts = []
+        displayText = ""
     }
     
     @MainActor
@@ -72,6 +76,7 @@ class MemoryTextViewModel: NSObject, ObservableObject {
         guard !displayText.characters.isEmpty else { return }
         masterTokens = tokenize(AttributedString(masterText.text))
         candidateTokens = tokenize(displayText)
+        transcripts = [String(displayText.characters)]
 
         var rangePairs = [RangePair(masterRange: 0..<masterTokens.count, candidateRange: 0..<candidateTokens.count, isMatched: false)]
         var updatedRangePairs = [RangePair]()
@@ -89,7 +94,24 @@ class MemoryTextViewModel: NSObject, ObservableObject {
         updateText(using: rangePairs)
     }
     
+    @MainActor
+    var dictationButtonTitle: String {
+        if speechRecognizer.isTranscribing {
+            return "Stop Dictation"
+        } else if displayText.unicodeScalars.isEmpty {
+            return "Start Dictation"
+        } else {
+            return "Continue Dictation"
+        }
+        
+    }
+    
     // MARK: - Helpers
+    
+    private func refreshDisplayTextFromTranscripts() {
+        displayText = ""
+        transcripts.forEach { displayText += AttributedString($0) + "\n" }
+    }
     
     private func tokenize(_ str: AttributedString) -> [Token] {
         var tokens = [Token]()
