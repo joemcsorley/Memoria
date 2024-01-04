@@ -21,6 +21,7 @@
 		95762ECE2B3E10E6001BA793 /* MemoryTextViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95762ECD2B3E10E6001BA793 /* MemoryTextViewModel.swift */; };
 		95762ED02B3E118F001BA793 /* RangePair.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95762ECF2B3E118E001BA793 /* RangePair.swift */; };
 		95762ED22B3E11AE001BA793 /* Token.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95762ED12B3E11AE001BA793 /* Token.swift */; };
+		95762ED42B44E1DF001BA793 /* LazyWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95762ED32B44E1DF001BA793 /* LazyWrapperView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,6 +59,7 @@
 		95762ECD2B3E10E6001BA793 /* MemoryTextViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoryTextViewModel.swift; sourceTree = "<group>"; };
 		95762ECF2B3E118E001BA793 /* RangePair.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RangePair.swift; sourceTree = "<group>"; };
 		95762ED12B3E11AE001BA793 /* Token.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Token.swift; sourceTree = "<group>"; };
+		95762ED32B44E1DF001BA793 /* LazyWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LazyWrapperView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,6 +114,7 @@
 				95762E9B2B3C98EC001BA793 /* MainMenuView.swift */,
 				95762EC92B3E0FFC001BA793 /* MemoryTextView.swift */,
 				95762EC72B3DFCAA001BA793 /* AddEditTextView.swift */,
+				95762ED32B44E1DF001BA793 /* LazyWrapperView.swift */,
 				95762ECB2B3E1098001BA793 /* SpeechRecognizer.swift */,
 				95762ECD2B3E10E6001BA793 /* MemoryTextViewModel.swift */,
 				95762EC52B3DF625001BA793 /* MemoryText.swift */,
@@ -280,6 +283,7 @@
 			files = (
 				95762ED22B3E11AE001BA793 /* Token.swift in Sources */,
 				95762ECC2B3E1098001BA793 /* SpeechRecognizer.swift in Sources */,
+				95762ED42B44E1DF001BA793 /* LazyWrapperView.swift in Sources */,
 				95762E9C2B3C98EC001BA793 /* MainMenuView.swift in Sources */,
 				95762EC82B3DFCAA001BA793 /* AddEditTextView.swift in Sources */,
 				95762ED02B3E118F001BA793 /* RangePair.swift in Sources */,

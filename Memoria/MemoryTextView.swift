@@ -15,6 +15,7 @@ struct MemoryTextView: View {
     init(_ vm: MemoryTextViewModel, speechRecognizer: SpeechRecognizer) {
         self.vm = vm
         self.speechRecognizer = speechRecognizer
+        print("***** MemoryTextView.init()  Called")
     }
     
     var body: some View {
@@ -45,7 +46,8 @@ struct MemoryTextView: View {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button(action: { isShowingEditView = true }) {
                     NavigationLink {
-                        AddEditTextView(vm: vm.addEditViewModel)
+                        AddEditTextView(storedText: vm.masterText)
+//                        LazyWrapperView(AddEditTextView(storedText: vm.masterText))
                     } label: {
                         Text("Edit")
                     }
@@ -56,6 +58,9 @@ struct MemoryTextView: View {
                     Text("Clear")
                 }
             }
+        }
+        .onAppear {
+            print("***** MemoryTextView.onAppear()  Called")
         }
     }
     

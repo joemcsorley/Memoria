@@ -14,7 +14,6 @@ typealias MatchInfo = (masterStartIndex: Int, consecutiveMatches: Int)
 class MemoryTextViewModel: NSObject, ObservableObject {
     @Bindable private(set) var masterText: MemoryText
     @Published var displayText = AttributedString("")
-    var addEditViewModel: AddEditTextViewModel
     private let speechRecognizer: SpeechRecognizer
     private var spokenInputCancellables = Set<AnyCancellable>()
     private var masterTokens = [Token]()
@@ -24,7 +23,6 @@ class MemoryTextViewModel: NSObject, ObservableObject {
     init(text: MemoryText, speechRecognizer: SpeechRecognizer) {
         self.masterText = text
         self.speechRecognizer = speechRecognizer
-        self.addEditViewModel = AddEditTextViewModel(text)
         super.init()
     }
     

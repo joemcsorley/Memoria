@@ -11,27 +11,29 @@ import SwiftData
 struct AddEditTextView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.modelContext) private var modelContext
-    @ObservedObject var vm: AddEditTextViewModel
+    @Bindable var storedText: MemoryText
+    @State private var text = MemoryText()
+    @State var isNew = false
     
     var body: some View {
         VStack {
             HStack {
-                Text("Date added: \(vm.text.dateAdded, format: Date.FormatStyle(date: .numeric, time: .standard))")
+                Text("Date added: \(text.dateAdded, format: Date.FormatStyle(date: .numeric, time: .standard))")
                     .font(.caption)
                     .foregroundStyle(Color.gray)
                 Spacer()
             }
             .padding(.bottom, 8)
             
-            TextField("Title", text: $vm.text.title)
-                .textInputAutocapitalization(.never)
+            TextField("Title", text: $text.title)
                 .disableAutocorrection(true)
                 .padding(EdgeInsets(top: 12, leading: 12, bottom: 12, trailing: 12))
                 .background(Color.gray.opacity(0.1))
                 .clipShape(RoundedRectangle(cornerRadius: 12))
                 .padding(.bottom, 8)
             
-            TextEditor(text: $vm.text.text)
+            TextEditor(text: $text.text)
+                .disableAutocorrection(true)
                 .scrollContentBackground(.hidden)
                 .padding(EdgeInsets(top: 12, leading: 12, bottom: 12, trailing: 12))
                 .background(Color.gray.opacity(0.1))
@@ -52,38 +54,20 @@ struct AddEditTextView: View {
             }
         }
         .onAppear {
-            vm.originalText = MemoryText(title: vm.text.title, text: vm.text.text)
-            if vm.isNew {
-                vm.text.title = ""
-                vm.text.text = ""
-                vm.text.dateAdded = Date()
-            }
+            print("***** AddEditTextView.onAppear()  Called for text: '\(String(describing: text.title))'")
+            text.copy(from: storedText)
         }
     }
-
+    
     private func handleCancel() {
-        if let originalText = vm.originalText, !vm.isNew {
-            vm.text.title = originalText.title
-            vm.text.text = originalText.text
+        if isNew {
+            modelContext.delete(storedText)
         }
         dismiss()
     }
 
     private func handleSave() {
-        if vm.isNew {
-            modelContext.insert(vm.text)
-        }
+        storedText.copy(from: text)
         dismiss()
-    }
-}
-
-class AddEditTextViewModel: ObservableObject {
-    @Bindable var text: MemoryText
-    var originalText: MemoryText?
-    var isNew = false
-    
-    init(_ text: MemoryText? = nil) {
-        self.text = text ?? MemoryText(title: "", text: "")
-        self.isNew = (text == nil)
     }
 }

@@ -11,6 +11,7 @@ import SwiftData
 struct MainMenuView: View {
     @Environment(\.modelContext) private var modelContext
     @Query private var texts: [MemoryText]
+    @State private var newText = MemoryText(title: "", text: "")
     @State private var isAddEditTextViewPresented = false
 
     var body: some View {
@@ -38,15 +39,19 @@ struct MainMenuView: View {
                 let speechRecognizer = SpeechRecognizer()
                 let memoryTextViewModel = MemoryTextViewModel(text: text, speechRecognizer: speechRecognizer)
                 MemoryTextView(memoryTextViewModel, speechRecognizer: speechRecognizer)
+//                LazyWrapperView(MemoryTextView(memoryTextViewModel, speechRecognizer: speechRecognizer))
             }
             .navigationDestination(isPresented: $isAddEditTextViewPresented) {
-                AddEditTextView(vm: AddEditTextViewModel())
+                AddEditTextView(storedText: newText, isNew: true)
+//                LazyWrapperView(AddEditTextView(vm: AddEditTextViewModel()))
             }
         }
     }
 
     private func addNewRow() {
         withAnimation {
+            newText = MemoryText(title: "", text: "")
+            modelContext.insert(newText)
             isAddEditTextViewPresented = true
         }
     }

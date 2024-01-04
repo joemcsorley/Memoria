@@ -19,8 +19,17 @@ final class MemoryText: Hashable {
         self.title = title
         self.text = text
     }
+
+    convenience init() {
+        self.init(title: "", text: "")
+    }
     
     var description: String {
         "MemoryText:  title=\(title), text=\(text), dateAdded = \(dateAdded)"
+    }
+    
+    func copy(from text: MemoryText) {
+        self.title = text.title
+        self.text = text.text
     }
 }
