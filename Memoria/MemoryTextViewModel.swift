@@ -11,9 +11,18 @@ import SwiftUI
 
 typealias MatchInfo = (masterStartIndex: Int, consecutiveMatches: Int)
 
-class MemoryTextViewModel: NSObject, ObservableObject {
-    @Bindable private(set) var masterText: MemoryText
-    @Published var displayText = AttributedString("")
+/// This class is largely responsible for comparing the spoken (candidate) text to the master text for accuracy.  The strategy is this:
+/// 1. Tokenize both texts into a series of words (without spaces or punctuation, keeping track of each word's index location in the original text).
+/// 2. Start by matching series' of (6 or more) words between the two texts.
+/// 3. Go through the remaining unmatched portions looking for a series of 5 matching words (then 4, 3, 2, 1).
+/// 4. Once all of the ranges of matching, and non-matching words are identified between the two texts, then display the original master text, highlighted appropriately:
+///    a. Green means the words match - the correct words were spoken.
+///    b. Red indicates words in the master text that were missed (not spoken).
+///    c. Orange indicates spoken words that were not in the master text.
+@Observable
+class MemoryTextViewModel: NSObject {
+    private(set) var masterText: MemoryText
+    var displayText = AttributedString("")
     private let speechRecognizer: SpeechRecognizer
     private var spokenInputCancellables = Set<AnyCancellable>()
     private var masterTokens = [Token]()
@@ -24,36 +33,47 @@ class MemoryTextViewModel: NSObject, ObservableObject {
         self.masterText = text
         self.speechRecognizer = speechRecognizer
         super.init()
+        Task {
+            await observeIsTranscribing()
+            await observeTranscriptUpdates()
+        }
+    }
+    
+    @MainActor
+    func observeTranscriptUpdates() {
+        withObservationTracking {
+//            print("***** MemoryTextViewModel.observeTranscriptUpdates()  New transcript = \(speechRecognizer.transcript.transcript)")
+            guard speechRecognizer.isTranscribing else { return }
+            if speechRecognizer.transcript.startTimeStamp != nil {
+                transcripts.append(speechRecognizer.transcript.transcript)
+            } else {
+                refreshDisplayTextFromTranscripts()
+                displayText += AttributedString(speechRecognizer.transcript.transcript)
+            }
+        } onChange: {
+//            print("***** MemoryTextViewModel.observeTranscriptUpdates()  onChange called")
+            Task { [weak self] in
+                await self?.observeTranscriptUpdates()
+            }
+        }
+    }
+
+    @MainActor
+    func observeIsTranscribing() {
+        withObservationTracking {
+//            print("***** MemoryTextViewModel.observeIsTranscribing()  New value = \(speechRecognizer.isTranscribing)")
+            guard !speechRecognizer.isTranscribing else { return }
+            evaluateText()
+        } onChange: {
+//            print("***** MemoryTextViewModel.observeIsTranscribing()  onChange called")
+            Task { [weak self] in
+                await self?.observeIsTranscribing()
+            }
+        }
     }
     
     @MainActor
     func handleSpokenInput() {
-        Task {
-            await speechRecognizer.$transcript
-                .receive(on: RunLoop.main)
-                .sink { [weak self] transcript in
-                    if transcript.startTimeStamp != nil {
-                        self?.transcripts.append(transcript.transcript)
-                    } else {
-                        self?.refreshDisplayTextFromTranscripts()
-                        self?.displayText += AttributedString(transcript.transcript)
-                    }
-                }
-                .store(in: &spokenInputCancellables)
-            
-            await speechRecognizer.$isTranscribing
-                .dropFirst()
-                .receive(on: RunLoop.main)
-                .sink { [weak self] isTranscribing in
-                    guard !isTranscribing else { return }
-                    self?.evaluateText()
-                    Task { [weak self] in
-                        self?.spokenInputCancellables.removeAll()
-                    }
-                }
-                .store(in: &spokenInputCancellables)
-        }
-        
         refreshDisplayTextFromTranscripts()
         speechRecognizer.resetTranscript()
         speechRecognizer.startTranscribing()

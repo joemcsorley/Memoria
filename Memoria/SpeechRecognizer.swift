@@ -12,7 +12,8 @@ import SwiftUI
 
 
 /// A helper for transcribing speech to text using SFSpeechRecognizer and AVAudioEngine.
-actor SpeechRecognizer: ObservableObject {
+@Observable
+class SpeechRecognizer {
     enum RecognizerError: Error {
         case nilRecognizer
         case notAuthorizedToRecognize
@@ -29,8 +30,8 @@ actor SpeechRecognizer: ObservableObject {
         }
     }
     
-    @Published @MainActor private(set) var transcript = SpeechTranscript.empty
-    @Published @MainActor private(set) var isTranscribing = false
+    @MainActor private(set) var transcript = SpeechTranscript.empty
+    @MainActor private(set) var isTranscribing = false
     
     private var audioEngine: AVAudioEngine?
     private var request: SFSpeechAudioBufferRecognitionRequest?
@@ -53,7 +54,7 @@ actor SpeechRecognizer: ObservableObject {
                 guard await SFSpeechRecognizer.hasAuthorizationToRecognize() else {
                     throw RecognizerError.notAuthorizedToRecognize
                 }
-                guard await AVAudioSession.sharedInstance().hasPermissionToRecord() else {
+                guard await AVAudioApplication.hasPermissionToRecord() else {
                     throw RecognizerError.notPermittedToRecord
                 }
             } catch {
@@ -67,14 +68,14 @@ actor SpeechRecognizer: ObservableObject {
             print("***** SpeechRecognizer.startTranscribing()  Called")
             transcript = .empty
             isTranscribing = true
-            await transcribe()
+            transcribe()
         }
     }
     
     @MainActor func resetTranscript() {
         Task {
             print("***** SpeechRecognizer.resetTranscript()  Called")
-            await reset()
+            reset()
         }
     }
     
@@ -82,7 +83,7 @@ actor SpeechRecognizer: ObservableObject {
         Task {
             print("***** SpeechRecognizer.stopTranscribing()  Called")
             isTranscribing = false
-            await reset()
+            reset()
         }
     }
 
@@ -147,9 +148,7 @@ actor SpeechRecognizer: ObservableObject {
         let receivedFinalResult = result?.isFinal ?? false
         let receivedError = error != nil
 
-//        print("***** SpeechRecognizer.recognitionHandler()  speechStartTimestamp = \(String(describing: result?.speechRecognitionMetadata?.speechStartTimestamp))")
         if receivedFinalResult || receivedError {
-//            print("***** SpeechRecognizer.recognitionHandler()  receivedFinalResult=\(receivedFinalResult), error=\(String(describing: error))")
             audioEngine.stop()
             audioEngine.inputNode.removeTap(onBus: 0)
         }
@@ -184,7 +183,6 @@ actor SpeechRecognizer: ObservableObject {
     }
 }
 
-
 struct SpeechTranscript {
     let transcript: String
     let startTimeStamp: TimeInterval?
@@ -204,8 +202,8 @@ extension SFSpeechRecognizer {
     }
 }
 
-extension AVAudioSession {
-    func hasPermissionToRecord() async -> Bool {
+extension AVAudioApplication {
+    static func hasPermissionToRecord() async -> Bool {
         await withCheckedContinuation { continuation in
             requestRecordPermission { authorized in
                 continuation.resume(returning: authorized)

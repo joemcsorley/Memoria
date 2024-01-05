@@ -40,6 +40,7 @@ struct AddEditTextView: View {
                 .clipShape(RoundedRectangle(cornerRadius: 12))
         }
         .padding(EdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16))
+        .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden()
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {

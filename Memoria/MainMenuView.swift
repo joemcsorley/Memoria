@@ -13,6 +13,7 @@ struct MainMenuView: View {
     @Query private var texts: [MemoryText]
     @State private var newText = MemoryText(title: "", text: "")
     @State private var isAddEditTextViewPresented = false
+    @State private var isHelpViewPresented = false
 
     var body: some View {
         NavigationStack {
@@ -26,6 +27,11 @@ struct MainMenuView: View {
             }
             .navigationTitle("Texts")
             .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button(action: { isHelpViewPresented.toggle() }) {
+                        Image(systemName: "questionmark.circle")
+                    }
+                }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     EditButton()
                 }
@@ -44,6 +50,9 @@ struct MainMenuView: View {
             .navigationDestination(isPresented: $isAddEditTextViewPresented) {
                 AddEditTextView(storedText: newText, isNew: true)
 //                LazyWrapperView(AddEditTextView(vm: AddEditTextViewModel()))
+            }
+            .sheet(isPresented: $isHelpViewPresented) {
+                HelpView()
             }
         }
     }

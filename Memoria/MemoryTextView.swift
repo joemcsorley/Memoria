@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct MemoryTextView: View {
-    @ObservedObject private var speechRecognizer: SpeechRecognizer
-    @ObservedObject private var vm: MemoryTextViewModel
+    @State private var speechRecognizer: SpeechRecognizer
+    @State private var vm: MemoryTextViewModel
     @State private var isShowingEditView = false
     
     init(_ vm: MemoryTextViewModel, speechRecognizer: SpeechRecognizer) {
@@ -66,6 +66,7 @@ struct MemoryTextView: View {
     
     // MARK: - Helpers
 
+    @MainActor
     private func handleDictationButtonTap() {
         if speechRecognizer.isTranscribing {
             vm.stopListening()

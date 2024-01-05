@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9551A0002B488A950080CBAB /* HelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95519FFF2B488A950080CBAB /* HelpView.swift */; };
 		95762E9A2B3C98EC001BA793 /* MemoriaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95762E992B3C98EC001BA793 /* MemoriaApp.swift */; };
 		95762E9C2B3C98EC001BA793 /* MainMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95762E9B2B3C98EC001BA793 /* MainMenuView.swift */; };
 		95762EA02B3C98EF001BA793 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 95762E9F2B3C98EF001BA793 /* Assets.xcassets */; };
@@ -42,6 +43,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		95519FFF2B488A950080CBAB /* HelpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpView.swift; sourceTree = "<group>"; };
 		95762E962B3C98EC001BA793 /* Memoria.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Memoria.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		95762E992B3C98EC001BA793 /* MemoriaApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoriaApp.swift; sourceTree = "<group>"; };
 		95762E9B2B3C98EC001BA793 /* MainMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMenuView.swift; sourceTree = "<group>"; };
@@ -114,6 +116,7 @@
 				95762E9B2B3C98EC001BA793 /* MainMenuView.swift */,
 				95762EC92B3E0FFC001BA793 /* MemoryTextView.swift */,
 				95762EC72B3DFCAA001BA793 /* AddEditTextView.swift */,
+				95519FFF2B488A950080CBAB /* HelpView.swift */,
 				95762ED32B44E1DF001BA793 /* LazyWrapperView.swift */,
 				95762ECB2B3E1098001BA793 /* SpeechRecognizer.swift */,
 				95762ECD2B3E10E6001BA793 /* MemoryTextViewModel.swift */,
@@ -286,6 +289,7 @@
 				95762ED42B44E1DF001BA793 /* LazyWrapperView.swift in Sources */,
 				95762E9C2B3C98EC001BA793 /* MainMenuView.swift in Sources */,
 				95762EC82B3DFCAA001BA793 /* AddEditTextView.swift in Sources */,
+				9551A0002B488A950080CBAB /* HelpView.swift in Sources */,
 				95762ED02B3E118F001BA793 /* RangePair.swift in Sources */,
 				95762ECA2B3E0FFC001BA793 /* MemoryTextView.swift in Sources */,
 				95762EC62B3DF625001BA793 /* MemoryText.swift in Sources */,
