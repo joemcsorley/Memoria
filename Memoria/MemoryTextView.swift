@@ -11,24 +11,36 @@ struct MemoryTextView: View {
     @State private var speechRecognizer: SpeechRecognizer
     @State private var vm: MemoryTextViewModel
     @State private var isShowingEditView = false
+    let scrollTopId = "MemoryTextViewScrollBottom"
+    let scrollBottomId = "MemoryTextViewScrollBottom"
     
     init(_ vm: MemoryTextViewModel, speechRecognizer: SpeechRecognizer) {
         self.vm = vm
         self.speechRecognizer = speechRecognizer
-        print("***** MemoryTextView.init()  Called")
+//        print("***** MemoryTextView.init()  Called")
     }
     
     var body: some View {
         VStack {
-            ScrollView {
-                Text(vm.displayText)
-                    .font(.body)
-                    .padding()
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+            ScrollViewReader { scrollViewProxy in
+                ScrollView {
+                    Text(vm.displayText)
+                        .font(.body)
+                        .padding()
+                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                        .id(scrollTopId)
+                    Spacer().id(scrollBottomId)
+                }
+                .background(Color.gray.opacity(0.1))
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+                .onChange(of: vm.displayText) {
+                    if speechRecognizer.isTranscribing {
+                        scrollViewProxy.scrollTo(scrollBottomId)
+                    } else {
+                        scrollViewProxy.scrollTo(scrollTopId, anchor: .top)
+                    }
+                }
             }
-            .background(Color.gray.opacity(0.1))
-            .clipShape(RoundedRectangle(cornerRadius: 12))
-            Spacer()
             Button(action: { handleDictationButtonTap() }) {
                 Text(vm.dictationButtonTitle)
                     .font(.title)
@@ -60,7 +72,7 @@ struct MemoryTextView: View {
             }
         }
         .onAppear {
-            print("***** MemoryTextView.onAppear()  Called")
+//            print("***** MemoryTextView.onAppear()  Called")
         }
     }
     

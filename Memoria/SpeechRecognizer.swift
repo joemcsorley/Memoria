@@ -65,7 +65,7 @@ class SpeechRecognizer {
     
     @MainActor func startTranscribing() {
         Task {
-            print("***** SpeechRecognizer.startTranscribing()  Called")
+//            print("***** SpeechRecognizer.startTranscribing()  Called")
             transcript = .empty
             isTranscribing = true
             transcribe()
@@ -75,13 +75,13 @@ class SpeechRecognizer {
     @MainActor func resetTranscript() {
         Task {
             print("***** SpeechRecognizer.resetTranscript()  Called")
-            reset()
+//            reset()
         }
     }
     
     @MainActor func stopTranscribing() {
         Task {
-            print("***** SpeechRecognizer.stopTranscribing()  Called")
+//            print("***** SpeechRecognizer.stopTranscribing()  Called")
             isTranscribing = false
             reset()
         }
