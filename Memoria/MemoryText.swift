@@ -11,6 +11,7 @@ import SwiftData
 @Model
 final class MemoryText: Hashable {
     var dateAdded: Date
+    var displayOrder = 0
     @Attribute(.unique) var title: String
     @Attribute(.externalStorage) var text: String
     
@@ -31,5 +32,12 @@ final class MemoryText: Hashable {
     func copy(from text: MemoryText) {
         self.title = text.title
         self.text = text.text
+    }
+}
+
+extension Collection {
+    subscript(safe index: Index?) -> Element? {
+        guard let index, indices.contains(index) else { return nil }
+        return self[index]
     }
 }

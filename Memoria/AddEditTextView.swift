@@ -14,7 +14,8 @@ struct AddEditTextView: View {
     @Bindable var storedText: MemoryText
     @State private var text = MemoryText()
     @State var isNew = false
-    
+    @State private var isDupAlert = false
+
     var body: some View {
         VStack {
             HStack {
@@ -58,6 +59,9 @@ struct AddEditTextView: View {
             print("***** AddEditTextView.onAppear()  Called for text: '\(String(describing: text.title))'")
             text.copy(from: storedText)
         }
+        .alert(isPresented: $isDupAlert) {
+            Alert(title: Text("Duplicate"), message: Text("There is already a text entitled: \(text.title)"), dismissButton: .cancel())
+        }
     }
     
     private func handleCancel() {
@@ -68,6 +72,13 @@ struct AddEditTextView: View {
     }
 
     private func handleSave() {
+        let newTitle = text.title
+        let fetchDescriptor = FetchDescriptor<MemoryText>(predicate: #Predicate { $0.title == newTitle })
+        let foundTexts = try? modelContext.fetch(fetchDescriptor)
+        guard foundTexts?.isEmpty ?? true else {
+            isDupAlert = true
+            return
+        }
         storedText.copy(from: text)
         dismiss()
     }

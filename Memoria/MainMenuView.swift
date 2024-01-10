@@ -10,7 +10,7 @@ import SwiftData
 
 struct MainMenuView: View {
     @Environment(\.modelContext) private var modelContext
-    @Query private var texts: [MemoryText]
+    @Query(sort: \MemoryText.displayOrder) private var texts: [MemoryText]
     @State private var newText = MemoryText(title: "", text: "")
     @State private var isAddEditTextViewPresented = false
     @State private var isHelpViewPresented = false
@@ -21,8 +21,10 @@ struct MainMenuView: View {
                 ForEach(texts) { text in
                     NavigationLink(value: text) {
                         Text(text.title)
+//                        Text("\(text.displayOrder) \(text.title)")
                     }
                 }
+                .onMove(perform: moveRows)
                 .onDelete(perform: deleteRows)
             }
             .navigationTitle("Texts")
@@ -41,6 +43,9 @@ struct MainMenuView: View {
                     }
                 }
             }
+            .onAppear {
+                print("***** MainMenuView.onAppear()  Called")
+            }
             .navigationDestination(for: MemoryText.self) { text in
                 let speechRecognizer = SpeechRecognizer()
                 let memoryTextViewModel = MemoryTextViewModel(text: text, speechRecognizer: speechRecognizer)
@@ -57,14 +62,38 @@ struct MainMenuView: View {
         }
     }
 
+    private func reorderRows() {
+        
+    }
+    
     private func addNewRow() {
         withAnimation {
             newText = MemoryText(title: "", text: "")
             modelContext.insert(newText)
+            var i = 1
+            texts.forEach {
+                $0.displayOrder = i
+                i += 1
+            }
             isAddEditTextViewPresented = true
         }
     }
 
+    private func moveRows(source: IndexSet, destination: Int) {
+        guard let sourceIndex = source.first else { return }
+        if sourceIndex < destination {
+            texts[safe: sourceIndex]?.displayOrder = texts[safe: destination-1]?.displayOrder ?? destination
+            for i in (sourceIndex+1)..<destination {
+                texts[safe: i]?.displayOrder -= 1
+            }
+        } else {
+            texts[safe: sourceIndex]?.displayOrder = texts[safe: destination]?.displayOrder ?? destination+1
+            for i in destination..<sourceIndex {
+                texts[safe: i]?.displayOrder += 1
+            }
+        }
+    }
+    
     private func deleteRows(offsets: IndexSet) {
         withAnimation {
             for index in offsets {
