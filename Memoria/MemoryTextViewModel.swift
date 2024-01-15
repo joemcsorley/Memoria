@@ -28,6 +28,9 @@ class MemoryTextViewModel: NSObject {
     private var masterTokens = [Token]()
     private var candidateTokens = [Token]()
     private var transcripts = [String]()
+    private var lastTranscript = ""
+    private var lastTranscriptSize = 0
+    
 
     init(text: MemoryText, speechRecognizer: SpeechRecognizer) {
         self.masterText = text
@@ -39,6 +42,10 @@ class MemoryTextViewModel: NSObject {
         }
     }
     
+    /// Observe, and capture changes to the speech recognizer's transcript, and update the displayed text accordingly.
+    /// Whenever there is a momentary pause in speech, the speech recognizer will typically publish the transcript with a startTimeStamp, then clear out the transcript, and continue on.
+    /// Sometimes, it doesn't publish the transcript with the startTimeStamp, however.  Therefore, there is also logic to look for a significant decrease in the size of the transcript from
+    /// one update to the next, and if so, capture the otherwise "lost" transcript.
     @MainActor
     func observeTranscriptUpdates() {
         withObservationTracking {
@@ -46,9 +53,18 @@ class MemoryTextViewModel: NSObject {
             guard speechRecognizer.isTranscribing else { return }
             if speechRecognizer.transcript.startTimeStamp != nil {
                 transcripts.append(speechRecognizer.transcript.transcript)
+                lastTranscript = ""
+                lastTranscriptSize = 0
             } else {
-                refreshDisplayTextFromTranscripts()
-                displayText += AttributedString(speechRecognizer.transcript.transcript)
+                if (lastTranscriptSize - speechRecognizer.transcript.transcript.count) > 25 {
+                    transcripts.append(lastTranscript)
+                }
+                var fullTranscript = ""
+                transcripts.forEach { fullTranscript += ($0 + "\n") }
+                fullTranscript += speechRecognizer.transcript.transcript
+                displayText = AttributedString(fullTranscript)
+                lastTranscript = speechRecognizer.transcript.transcript
+                lastTranscriptSize = lastTranscript.count
             }
         } onChange: {
 //            print("***** MemoryTextViewModel.observeTranscriptUpdates()  onChange called")

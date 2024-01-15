@@ -72,7 +72,7 @@ struct AddEditTextView: View {
     }
 
     private func handleSave() {
-        let newTitle = text.title
+        let newTitle = text.title  // Can't use another model in the definition of the predicate
         let fetchDescriptor = FetchDescriptor<MemoryText>(predicate: #Predicate { $0.title == newTitle })
         let foundTexts = try? modelContext.fetch(fetchDescriptor)
         guard foundTexts?.isEmpty ?? true else {

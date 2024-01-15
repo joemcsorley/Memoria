@@ -130,8 +130,11 @@ class SpeechRecognizer {
         request.addsPunctuation = true
         
         let audioSession = AVAudioSession.sharedInstance()
-        try audioSession.setCategory(.playAndRecord, mode: .measurement, options: .duckOthers)
+        try audioSession.setCategory(.record, mode: .default, options: [.allowBluetooth, .duckOthers])
         try audioSession.setActive(true, options: .notifyOthersOnDeactivation)
+        if let inputDevice = audioSession.availableInputs?.first(where: { $0.portType.rawValue.lowercased().contains("bluetooth") }) {
+            try audioSession.setPreferredInput(inputDevice)
+        }
         let inputNode = audioEngine.inputNode
         
         let recordingFormat = inputNode.outputFormat(forBus: 0)
