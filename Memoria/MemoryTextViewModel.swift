@@ -79,6 +79,8 @@ class MemoryTextViewModel: NSObject {
         withObservationTracking {
 //            print("***** MemoryTextViewModel.observeIsTranscribing()  New value = \(speechRecognizer.isTranscribing)")
             guard !speechRecognizer.isTranscribing else { return }
+            lastTranscript = ""
+            lastTranscriptSize = 0
             evaluateText()
         } onChange: {
 //            print("***** MemoryTextViewModel.observeIsTranscribing()  onChange called")
@@ -90,7 +92,6 @@ class MemoryTextViewModel: NSObject {
     
     @MainActor
     func handleSpokenInput() {
-        refreshDisplayTextFromTranscripts()
         speechRecognizer.resetTranscript()
         speechRecognizer.startTranscribing()
     }
@@ -125,7 +126,7 @@ class MemoryTextViewModel: NSObject {
             rangePairs = consolidate(rangePairs: updatedRangePairs)
             updatedRangePairs = []
         }
-        updateText(using: rangePairs)
+        displayHighlightedText(using: rangePairs)
     }
     
     @MainActor
@@ -141,11 +142,6 @@ class MemoryTextViewModel: NSObject {
     }
     
     // MARK: - Helpers
-    
-    private func refreshDisplayTextFromTranscripts() {
-        displayText = ""
-        transcripts.forEach { displayText += AttributedString($0) + "\n" }
-    }
     
     private func tokenize(_ str: AttributedString) -> [Token] {
         var tokens = [Token]()
@@ -255,7 +251,7 @@ class MemoryTextViewModel: NSObject {
     }
     
     ///  Update the displayed text to be properly highlighted, and annotated to indicate the speaker's accuracy.
-    private func updateText(using rangePairs: [RangePair]) {
+    private func displayHighlightedText(using rangePairs: [RangePair]) {
         // Start with a clean copy of the master text.
         var newText = AttributedString(masterText.text)
         
