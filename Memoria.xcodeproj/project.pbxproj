@@ -458,7 +458,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Memoria/Preview Content\"";
-				DEVELOPMENT_TEAM = MB4ZF7K9AA;
+				DEVELOPMENT_TEAM = 7J5JK78Z95;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "This is required for speech recognition..";
@@ -474,7 +474,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.joemcsorley.Memoria;
+				PRODUCT_BUNDLE_IDENTIFIER = com.apexmonkeyboy.memoria;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -490,7 +490,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Memoria/Preview Content\"";
-				DEVELOPMENT_TEAM = MB4ZF7K9AA;
+				DEVELOPMENT_TEAM = 7J5JK78Z95;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "This is required for speech recognition..";
@@ -506,7 +506,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.joemcsorley.Memoria;
+				PRODUCT_BUNDLE_IDENTIFIER = com.apexmonkeyboy.memoria;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
