@@ -1,5 +1,5 @@
 //
-//  MemoryTextViewModel.swift
+//  DictationViewModel.swift
 //  Memoria
 //
 //  Created by Joseph McSorley on 12/28/23.
@@ -20,10 +20,10 @@ typealias MatchInfo = (masterStartIndex: Int, consecutiveMatches: Int)
 ///    b. Red indicates words in the master text that were missed (not spoken).
 ///    c. Orange indicates spoken words that were not in the master text.
 @Observable
-class MemoryTextViewModel: NSObject {
+class DictationViewModel: NSObject {
     private(set) var masterText: MemoryText
     var displayText = AttributedString("")
-    private let speechRecognizer: SpeechRecognizer
+    let speechRecognizer: SpeechRecognizer
     private var spokenInputCancellables = Set<AnyCancellable>()
     private var masterTokens = [Token]()
     private var candidateTokens = [Token]()

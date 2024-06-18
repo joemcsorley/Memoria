@@ -10,6 +10,8 @@ import SwiftData
 
 @main
 struct MemoriaApp: App {
+    let navCoordinator = NavigationCoordinator<AppScreens>()
+    
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             MemoryText.self,
@@ -25,7 +27,7 @@ struct MemoriaApp: App {
 
     var body: some Scene {
         WindowGroup {
-            MainMenuView()
+            NavigationRootView(navCoordinator: navCoordinator)
         }
         .modelContainer(sharedModelContainer)
     }

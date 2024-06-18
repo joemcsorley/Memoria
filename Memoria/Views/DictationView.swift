@@ -1,5 +1,5 @@
 //
-//  MemoryTextView.swift
+//  DictationView.swift
 //  Memoria
 //
 //  Created by Joseph McSorley on 12/28/23.
@@ -7,20 +7,14 @@
 
 import SwiftUI
 
-struct MemoryTextView: View {
-    @State private var speechRecognizer: SpeechRecognizer
-    @State private var vm: MemoryTextViewModel
-    @State private var isShowingEditView = false
+struct DictationView: View {
+    @Environment(NavigationCoordinator<AppScreens>.self) var navCoordinator
+    @Bindable var vm: DictationViewModel
     let scrollTopId = "MemoryTextViewScrollBottom"
     let scrollBottomId = "MemoryTextViewScrollBottom"
     
-    init(_ vm: MemoryTextViewModel, speechRecognizer: SpeechRecognizer) {
-        self.vm = vm
-        self.speechRecognizer = speechRecognizer
-//        print("***** MemoryTextView.init()  Called")
-    }
-    
     var body: some View {
+        @Bindable var speechRecognizer = vm.speechRecognizer
         VStack {
             ScrollViewReader { scrollViewProxy in
                 ScrollView {
@@ -56,13 +50,8 @@ struct MemoryTextView: View {
         .navigationTitle(vm.masterText.title)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
-                Button(action: { isShowingEditView = true }) {
-                    NavigationLink {
-                        AddEditTextView(storedText: vm.masterText)
-//                        LazyWrapperView(AddEditTextView(storedText: vm.masterText))
-                    } label: {
-                        Text("Edit")
-                    }
+                Button(action: { navCoordinator.push(.addEditText(vm.masterText, false)) }) {
+                    Text("Edit")
                 }
             }
             ToolbarItem {
@@ -71,16 +60,13 @@ struct MemoryTextView: View {
                 }
             }
         }
-        .onAppear {
-//            print("***** MemoryTextView.onAppear()  Called")
-        }
     }
     
     // MARK: - Helpers
 
     @MainActor
     private func handleDictationButtonTap() {
-        if speechRecognizer.isTranscribing {
+        if vm.speechRecognizer.isTranscribing {
             vm.stopListening()
         } else {
             vm.handleSpokenInput()
@@ -90,6 +76,6 @@ struct MemoryTextView: View {
 
 #Preview {
     let text = MemoryText(title: "Sample Text", text: "This is a sentence of sample text for the preview.")
-    return MemoryTextView(MemoryTextViewModel(text: text, speechRecognizer: SpeechRecognizer()), speechRecognizer: SpeechRecognizer())
+    return DictationView(vm: DictationViewModel(text: text, speechRecognizer: SpeechRecognizer()))
 }
 

@@ -17,12 +17,13 @@
 		95762EB92B3C98F1001BA793 /* MemoriaUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95762EB82B3C98F1001BA793 /* MemoriaUITestsLaunchTests.swift */; };
 		95762EC62B3DF625001BA793 /* MemoryText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95762EC52B3DF625001BA793 /* MemoryText.swift */; };
 		95762EC82B3DFCAA001BA793 /* AddEditTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95762EC72B3DFCAA001BA793 /* AddEditTextView.swift */; };
-		95762ECA2B3E0FFC001BA793 /* MemoryTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95762EC92B3E0FFC001BA793 /* MemoryTextView.swift */; };
+		95762ECA2B3E0FFC001BA793 /* DictationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95762EC92B3E0FFC001BA793 /* DictationView.swift */; };
 		95762ECC2B3E1098001BA793 /* SpeechRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95762ECB2B3E1098001BA793 /* SpeechRecognizer.swift */; };
-		95762ECE2B3E10E6001BA793 /* MemoryTextViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95762ECD2B3E10E6001BA793 /* MemoryTextViewModel.swift */; };
+		95762ECE2B3E10E6001BA793 /* DictationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95762ECD2B3E10E6001BA793 /* DictationViewModel.swift */; };
 		95762ED02B3E118F001BA793 /* RangePair.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95762ECF2B3E118E001BA793 /* RangePair.swift */; };
 		95762ED22B3E11AE001BA793 /* Token.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95762ED12B3E11AE001BA793 /* Token.swift */; };
-		95762ED42B44E1DF001BA793 /* LazyWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95762ED32B44E1DF001BA793 /* LazyWrapperView.swift */; };
+		95EC06352C220900002059FB /* NavigationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95EC06342C220900002059FB /* NavigationCoordinator.swift */; };
+		95EC06372C220CF3002059FB /* AppScreens.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95EC06362C220CF2002059FB /* AppScreens.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,12 +57,13 @@
 		95762EB82B3C98F1001BA793 /* MemoriaUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoriaUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		95762EC52B3DF625001BA793 /* MemoryText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoryText.swift; sourceTree = "<group>"; };
 		95762EC72B3DFCAA001BA793 /* AddEditTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEditTextView.swift; sourceTree = "<group>"; };
-		95762EC92B3E0FFC001BA793 /* MemoryTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoryTextView.swift; sourceTree = "<group>"; };
+		95762EC92B3E0FFC001BA793 /* DictationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictationView.swift; sourceTree = "<group>"; };
 		95762ECB2B3E1098001BA793 /* SpeechRecognizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechRecognizer.swift; sourceTree = "<group>"; };
-		95762ECD2B3E10E6001BA793 /* MemoryTextViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoryTextViewModel.swift; sourceTree = "<group>"; };
+		95762ECD2B3E10E6001BA793 /* DictationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictationViewModel.swift; sourceTree = "<group>"; };
 		95762ECF2B3E118E001BA793 /* RangePair.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RangePair.swift; sourceTree = "<group>"; };
 		95762ED12B3E11AE001BA793 /* Token.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Token.swift; sourceTree = "<group>"; };
-		95762ED32B44E1DF001BA793 /* LazyWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LazyWrapperView.swift; sourceTree = "<group>"; };
+		95EC06342C220900002059FB /* NavigationCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationCoordinator.swift; sourceTree = "<group>"; };
+		95EC06362C220CF2002059FB /* AppScreens.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppScreens.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -113,16 +115,10 @@
 			isa = PBXGroup;
 			children = (
 				95762E992B3C98EC001BA793 /* MemoriaApp.swift */,
-				95762E9B2B3C98EC001BA793 /* MainMenuView.swift */,
-				95762EC92B3E0FFC001BA793 /* MemoryTextView.swift */,
-				95762EC72B3DFCAA001BA793 /* AddEditTextView.swift */,
-				95519FFF2B488A950080CBAB /* HelpView.swift */,
-				95762ED32B44E1DF001BA793 /* LazyWrapperView.swift */,
-				95762ECB2B3E1098001BA793 /* SpeechRecognizer.swift */,
-				95762ECD2B3E10E6001BA793 /* MemoryTextViewModel.swift */,
-				95762EC52B3DF625001BA793 /* MemoryText.swift */,
-				95762ECF2B3E118E001BA793 /* RangePair.swift */,
-				95762ED12B3E11AE001BA793 /* Token.swift */,
+				95EC06302C220806002059FB /* Views */,
+				95EC06312C220855002059FB /* ViewModels */,
+				95EC06332C2208A6002059FB /* Models */,
+				95EC06322C220873002059FB /* Utility */,
 				95762E9F2B3C98EF001BA793 /* Assets.xcassets */,
 				95762EA12B3C98EF001BA793 /* Preview Content */,
 			);
@@ -152,6 +148,45 @@
 				95762EB82B3C98F1001BA793 /* MemoriaUITestsLaunchTests.swift */,
 			);
 			path = MemoriaUITests;
+			sourceTree = "<group>";
+		};
+		95EC06302C220806002059FB /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				95EC06362C220CF2002059FB /* AppScreens.swift */,
+				95762E9B2B3C98EC001BA793 /* MainMenuView.swift */,
+				95762EC92B3E0FFC001BA793 /* DictationView.swift */,
+				95762EC72B3DFCAA001BA793 /* AddEditTextView.swift */,
+				95519FFF2B488A950080CBAB /* HelpView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		95EC06312C220855002059FB /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				95762ECD2B3E10E6001BA793 /* DictationViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		95EC06322C220873002059FB /* Utility */ = {
+			isa = PBXGroup;
+			children = (
+				95EC06342C220900002059FB /* NavigationCoordinator.swift */,
+				95762ECB2B3E1098001BA793 /* SpeechRecognizer.swift */,
+				95762ECF2B3E118E001BA793 /* RangePair.swift */,
+				95762ED12B3E11AE001BA793 /* Token.swift */,
+			);
+			path = Utility;
+			sourceTree = "<group>";
+		};
+		95EC06332C2208A6002059FB /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				95762EC52B3DF625001BA793 /* MemoryText.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -286,14 +321,15 @@
 			files = (
 				95762ED22B3E11AE001BA793 /* Token.swift in Sources */,
 				95762ECC2B3E1098001BA793 /* SpeechRecognizer.swift in Sources */,
-				95762ED42B44E1DF001BA793 /* LazyWrapperView.swift in Sources */,
 				95762E9C2B3C98EC001BA793 /* MainMenuView.swift in Sources */,
+				95EC06372C220CF3002059FB /* AppScreens.swift in Sources */,
 				95762EC82B3DFCAA001BA793 /* AddEditTextView.swift in Sources */,
 				9551A0002B488A950080CBAB /* HelpView.swift in Sources */,
 				95762ED02B3E118F001BA793 /* RangePair.swift in Sources */,
-				95762ECA2B3E0FFC001BA793 /* MemoryTextView.swift in Sources */,
+				95762ECA2B3E0FFC001BA793 /* DictationView.swift in Sources */,
 				95762EC62B3DF625001BA793 /* MemoryText.swift in Sources */,
-				95762ECE2B3E10E6001BA793 /* MemoryTextViewModel.swift in Sources */,
+				95762ECE2B3E10E6001BA793 /* DictationViewModel.swift in Sources */,
+				95EC06352C220900002059FB /* NavigationCoordinator.swift in Sources */,
 				95762E9A2B3C98EC001BA793 /* MemoriaApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

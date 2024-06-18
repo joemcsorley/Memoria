@@ -9,12 +9,12 @@ import SwiftUI
 import SwiftData
 
 struct AddEditTextView: View {
-    @Environment(\.dismiss) var dismiss
+    @Environment(NavigationCoordinator<AppScreens>.self) var navCoordinator
     @Environment(\.modelContext) private var modelContext
+    @Bindable var vm: AddEditViewModel
     @Bindable var storedText: MemoryText
     @State private var text = MemoryText()
     @State var isNew = false
-    @State private var isDupAlert = false
 
     var body: some View {
         VStack {
@@ -56,30 +56,33 @@ struct AddEditTextView: View {
             }
         }
         .onAppear {
-            print("***** AddEditTextView.onAppear()  Called for text: '\(String(describing: text.title))'")
             text.copy(from: storedText)
         }
-        .alert(isPresented: $isDupAlert) {
-            Alert(title: Text("Duplicate"), message: Text("There is already a text entitled: \(text.title)"), dismissButton: .cancel())
-        }
+        .modalPresenting(using: vm, navCoordinator: navCoordinator)
     }
     
     private func handleCancel() {
         if isNew {
             modelContext.delete(storedText)
         }
-        dismiss()
+        navCoordinator.pop()
     }
 
     private func handleSave() {
-        let newTitle = text.title  // Can't use another model in the definition of the predicate
-        let fetchDescriptor = FetchDescriptor<MemoryText>(predicate: #Predicate { $0.title == newTitle })
-        let foundTexts = try? modelContext.fetch(fetchDescriptor)
-        guard foundTexts?.isEmpty ?? true else {
-            isDupAlert = true
-            return
+        if isNew {
+            let newTitle = text.title  // Can't use another model in the definition of the predicate
+            let fetchDescriptor = FetchDescriptor<MemoryText>(predicate: #Predicate { $0.title == newTitle })
+            let foundTexts = try? modelContext.fetch(fetchDescriptor)
+            guard foundTexts?.isEmpty ?? true else {
+                vm.presentAlert(AlertViewComponents(title: "Duplicate",
+                                                    message: "There is already a text entitled: \(text.title)",
+                                                    buttons: [AlertButton(id: 1, title: "Ok", role: .cancel)]))
+                return
+            }
         }
         storedText.copy(from: text)
-        dismiss()
+        navCoordinator.pop()
     }
 }
+
+class AddEditViewModel: ModalPresenter<AppScreens> {}
