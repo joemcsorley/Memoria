@@ -107,6 +107,7 @@ class DictationViewModel: NSObject {
         speechRecognizer.stopTranscribing()
     }
     
+    /// Starting with a RangePair that encompasses the entirety of both the candidate, and master texts (tokenized), break it into an array of RangePairs where the matching ones have matching sequences of at least 6 tokens.  Then iterate over those RangePairs looking for matching tokens sequences of at least 5 in the remaining non-matching ones.  Then 4, 3, 2, 1, until the resulting array of RangePairs represent as much matched text (tokens) as possible.  Finally, iterate over the master text, using this resulting array of RangePairs to highlight it appropriately.
     func evaluateText() {
         guard !displayText.characters.isEmpty else { return }
         masterTokens = tokenize(AttributedString(masterText.text))
@@ -173,6 +174,7 @@ class DictationViewModel: NSObject {
         t1.value == t2.value
     }
     
+    /// For candidate tokens starting at the specified index (and ending at the specified index), return the number of matched tokens in the specified masterRange (starting at the first in the range).
     private func consecutiveMatches(for candidateIndex: Int, in masterRange: Range<Int>, candidateEndIndex: Int) -> Int {
         var matches = 0
         var candIdx = candidateIndex
@@ -183,7 +185,8 @@ class DictationViewModel: NSObject {
         }
         return matches
     }
-        
+    
+    /// For candidate tokens starting at the specified index (and ending at the specified index), search the masterRange for the longest consecutive set of matching tokens.
     private func bestMatch(for candIdx: Int, in masterRange: Range<Int>, candidateEndIndex: Int) -> MatchInfo {
         var bestMatch = MatchInfo(masterRange.startIndex, 0)
         for mastIdx in masterRange {
@@ -195,6 +198,7 @@ class DictationViewModel: NSObject {
         return bestMatch
     }
     
+    /// Find the longest sequences of matching tokens in the candidate and master ranges of the specified RangePair, that are at least as long as minMatches.  Return an array of RangePairs which correspond to all sequences of matching and non-matching tokens.
     private func matchText(in rangePair: RangePair, minMatches: Int) -> [RangePair] {
         guard !rangePair.isMatched, rangePair.masterRange.count >= minMatches, rangePair.candidateRange.count >= minMatches else { return [rangePair] }
         var mastStartIdx = rangePair.masterRange.startIndex
@@ -237,6 +241,7 @@ class DictationViewModel: NSObject {
         return rangePairs
     }
     
+    /// Iterate over an array of RangePairs, and if two adjacent RangePairs both either match, or don't match, then consolidate them into one RangePair.  Also, remove any empty RangePairs.  The returned result is an array of RangePairs that alternately ..., match, don't match, match, don't match, etc.
     private func consolidate(rangePairs: [RangePair]) -> [RangePair] {
         var updatedRangePairs = [RangePair]()
         rangePairs.forEach { rangePair in
@@ -264,18 +269,21 @@ class DictationViewModel: NSObject {
             }
         }
         
-        // Insert (highlighted) extraneous words that don't appear in the master text.
+        // Insert (highlighted) extraneous words that don't appear in the master text.  They are inserted after the last correctly matched text, and before any missed text.
         rangePairs.reversed().forEach { rangePair in
             guard !rangePair.isMatched, !rangePair.candidateRange.isEmpty else { return }
             let sourceStartToken = candidateTokens[rangePair.candidateRange.startIndex]
             let sourceEndToken = candidateTokens[rangePair.candidateRange.endIndex-1]
             let sourceRange = sourceStartToken.startIndex..<sourceEndToken.endIndex
             let targetIdx = switch rangePair.masterRange.endIndex {
+            // The extraneous text falls at the beginning of the master text
             case 0: newText.startIndex
-            case masterTokens.count: newText.endIndex
-            default: masterTokens[rangePair.masterRange.endIndex-1].endIndex
+            // The extraneous text falls at the end of the master text
+            case rangePair.masterRange.startIndex: newText.endIndex
+            // The extraneous text falls somewhere in the middle of the master text
+            default: newText.index(beforeCharacter: masterTokens[rangePair.masterRange.startIndex].startIndex)
             }
-            var sourceText = " [" + displayText[sourceRange] + "]"
+            var sourceText = (targetIdx == newText.startIndex ? "[" : " [") + displayText[sourceRange] + (targetIdx == newText.startIndex ? "] " : "]")
             sourceText.foregroundColor = .orange
             newText.insert(sourceText, at: targetIdx)
         }

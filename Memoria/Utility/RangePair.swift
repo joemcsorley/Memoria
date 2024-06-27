@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Each RangePair represents a range of tokens in the master text, and a range in the candidate text, and whether or not they match.
 struct RangePair {
     var masterRange: Range<Int>
     var candidateRange: Range<Int>
