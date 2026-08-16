@@ -10,16 +10,17 @@ import SwiftData
 
 @main
 struct MemoriaApp: App {
-    let navCoordinator = NavigationCoordinator<AppScreens>()
+    @State private var navCoordinator = NavigationCoordinator<AppScreens>()
     
     var sharedModelContainer: ModelContainer = {
-        let schema = Schema([
-            MemoryText.self,
-        ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+        let schema = Schema([MemoryText.self])
+        let modelConfiguration = ModelConfiguration(schema: schema)
 
         do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
+            let modelContainer = try ModelContainer(for: schema, configurations: [modelConfiguration])
+            dataStores.modelContainer = modelContainer
+            return modelContainer
+//            return try ModelContainer(for: schema, configurations: [modelConfiguration])
         } catch {
             fatalError("Could not create ModelContainer: \(error)")
         }

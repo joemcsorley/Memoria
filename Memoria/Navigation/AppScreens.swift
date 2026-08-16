@@ -1,13 +1,14 @@
 //
 //  AppScreens.swift
-//  Veritask
+//  Memoria
 //
 //  Created by Joseph McSorley on 6/18/24.
 //
 
 import SwiftUI
 
-indirect enum AppScreens: NavigationScreenDefinition {
+@MainActor
+indirect enum AppScreens: @MainActor NavigationScreenDefinition {
     case mainMenu
     case dictation(MemoryText)
     case addEditText(MemoryText, Bool)
@@ -30,7 +31,7 @@ indirect enum AppScreens: NavigationScreenDefinition {
     }
 
     private func mainMenuView(navCoordinator: NavigationCoordinator<Self>) -> some View {
-        let vm = navCoordinator.observable(for: self, default: MainMenuViewModel())
+        let vm = navCoordinator.observable(for: self, default: MainMenuViewModel(navCoordinator: navCoordinator))
         return MainMenuView(vm: vm)
     }
 
@@ -41,7 +42,7 @@ indirect enum AppScreens: NavigationScreenDefinition {
     }
     
     private func addEditTextView(memoryText: MemoryText, isNew: Bool, navCoordinator: NavigationCoordinator<Self>) -> some View {
-        let vm = navCoordinator.observable(for: self, default: AddEditViewModel())
+        let vm = navCoordinator.observable(for: self, default: AddEditViewModel(navCoordinator: navCoordinator))
         return AddEditTextView(vm: vm, storedText: memoryText, isNew: isNew)
     }
 }

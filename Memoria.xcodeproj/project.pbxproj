@@ -24,6 +24,12 @@
 		95762ED22B3E11AE001BA793 /* Token.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95762ED12B3E11AE001BA793 /* Token.swift */; };
 		95EC06352C220900002059FB /* NavigationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95EC06342C220900002059FB /* NavigationCoordinator.swift */; };
 		95EC06372C220CF3002059FB /* AppScreens.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95EC06362C220CF2002059FB /* AppScreens.swift */; };
+		D8F6FF5D3028F22F00AF6CE9 /* Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8F6FF5C3028F22D00AF6CE9 /* Alert.swift */; };
+		D8F6FF5F3028F23A00AF6CE9 /* ModalPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8F6FF5E3028F23500AF6CE9 /* ModalPresenter.swift */; };
+		D8F6FF613028F70F00AF6CE9 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8F6FF603028F70E00AF6CE9 /* Extensions.swift */; };
+		D8F6FF643028F99E00AF6CE9 /* DataStores.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8F6FF633028F99900AF6CE9 /* DataStores.swift */; };
+		D8F6FF663028FA3700AF6CE9 /* MemoryTextStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8F6FF653028FA3200AF6CE9 /* MemoryTextStore.swift */; };
+		D8F6FF683030EC9D00AF6CE9 /* TextComparator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8F6FF673030EC9600AF6CE9 /* TextComparator.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -64,6 +70,12 @@
 		95762ED12B3E11AE001BA793 /* Token.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Token.swift; sourceTree = "<group>"; };
 		95EC06342C220900002059FB /* NavigationCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationCoordinator.swift; sourceTree = "<group>"; };
 		95EC06362C220CF2002059FB /* AppScreens.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppScreens.swift; sourceTree = "<group>"; };
+		D8F6FF5C3028F22D00AF6CE9 /* Alert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alert.swift; sourceTree = "<group>"; };
+		D8F6FF5E3028F23500AF6CE9 /* ModalPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalPresenter.swift; sourceTree = "<group>"; };
+		D8F6FF603028F70E00AF6CE9 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		D8F6FF633028F99900AF6CE9 /* DataStores.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStores.swift; sourceTree = "<group>"; };
+		D8F6FF653028FA3200AF6CE9 /* MemoryTextStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoryTextStore.swift; sourceTree = "<group>"; };
+		D8F6FF673030EC9600AF6CE9 /* TextComparator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextComparator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -118,6 +130,8 @@
 				95EC06302C220806002059FB /* Views */,
 				95EC06312C220855002059FB /* ViewModels */,
 				95EC06332C2208A6002059FB /* Models */,
+				D8F6FF5B3028F11C00AF6CE9 /* Navigation */,
+				D8F6FF623028F98600AF6CE9 /* DataStores */,
 				95EC06322C220873002059FB /* Utility */,
 				95762E9F2B3C98EF001BA793 /* Assets.xcassets */,
 				95762EA12B3C98EF001BA793 /* Preview Content */,
@@ -153,7 +167,6 @@
 		95EC06302C220806002059FB /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				95EC06362C220CF2002059FB /* AppScreens.swift */,
 				95762E9B2B3C98EC001BA793 /* MainMenuView.swift */,
 				95762EC92B3E0FFC001BA793 /* DictationView.swift */,
 				95762EC72B3DFCAA001BA793 /* AddEditTextView.swift */,
@@ -173,7 +186,8 @@
 		95EC06322C220873002059FB /* Utility */ = {
 			isa = PBXGroup;
 			children = (
-				95EC06342C220900002059FB /* NavigationCoordinator.swift */,
+				D8F6FF673030EC9600AF6CE9 /* TextComparator.swift */,
+				D8F6FF603028F70E00AF6CE9 /* Extensions.swift */,
 				95762ECB2B3E1098001BA793 /* SpeechRecognizer.swift */,
 				95762ECF2B3E118E001BA793 /* RangePair.swift */,
 				95762ED12B3E11AE001BA793 /* Token.swift */,
@@ -187,6 +201,26 @@
 				95762EC52B3DF625001BA793 /* MemoryText.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		D8F6FF5B3028F11C00AF6CE9 /* Navigation */ = {
+			isa = PBXGroup;
+			children = (
+				95EC06342C220900002059FB /* NavigationCoordinator.swift */,
+				D8F6FF5E3028F23500AF6CE9 /* ModalPresenter.swift */,
+				D8F6FF5C3028F22D00AF6CE9 /* Alert.swift */,
+				95EC06362C220CF2002059FB /* AppScreens.swift */,
+			);
+			path = Navigation;
+			sourceTree = "<group>";
+		};
+		D8F6FF623028F98600AF6CE9 /* DataStores */ = {
+			isa = PBXGroup;
+			children = (
+				D8F6FF633028F99900AF6CE9 /* DataStores.swift */,
+				D8F6FF653028FA3200AF6CE9 /* MemoryTextStore.swift */,
+			);
+			path = DataStores;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -253,7 +287,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1510;
-				LastUpgradeCheck = 1510;
+				LastUpgradeCheck = 2660;
 				TargetAttributes = {
 					95762E952B3C98EC001BA793 = {
 						CreatedOnToolsVersion = 15.1;
@@ -320,16 +354,22 @@
 			buildActionMask = 2147483647;
 			files = (
 				95762ED22B3E11AE001BA793 /* Token.swift in Sources */,
+				D8F6FF643028F99E00AF6CE9 /* DataStores.swift in Sources */,
 				95762ECC2B3E1098001BA793 /* SpeechRecognizer.swift in Sources */,
+				D8F6FF5F3028F23A00AF6CE9 /* ModalPresenter.swift in Sources */,
 				95762E9C2B3C98EC001BA793 /* MainMenuView.swift in Sources */,
 				95EC06372C220CF3002059FB /* AppScreens.swift in Sources */,
 				95762EC82B3DFCAA001BA793 /* AddEditTextView.swift in Sources */,
+				D8F6FF663028FA3700AF6CE9 /* MemoryTextStore.swift in Sources */,
+				D8F6FF613028F70F00AF6CE9 /* Extensions.swift in Sources */,
+				D8F6FF5D3028F22F00AF6CE9 /* Alert.swift in Sources */,
 				9551A0002B488A950080CBAB /* HelpView.swift in Sources */,
 				95762ED02B3E118F001BA793 /* RangePair.swift in Sources */,
 				95762ECA2B3E0FFC001BA793 /* DictationView.swift in Sources */,
 				95762EC62B3DF625001BA793 /* MemoryText.swift in Sources */,
 				95762ECE2B3E10E6001BA793 /* DictationViewModel.swift in Sources */,
 				95EC06352C220900002059FB /* NavigationCoordinator.swift in Sources */,
+				D8F6FF683030EC9D00AF6CE9 /* TextComparator.swift in Sources */,
 				95762E9A2B3C98EC001BA793 /* MemoriaApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -425,6 +465,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -481,6 +522,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -553,7 +595,6 @@
 		95762EC02B3C98F1001BA793 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -573,7 +614,6 @@
 		95762EC12B3C98F1001BA793 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -593,7 +633,6 @@
 		95762EC32B3C98F1001BA793 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = MB4ZF7K9AA;
@@ -611,7 +650,6 @@
 		95762EC42B3C98F1001BA793 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = MB4ZF7K9AA;

@@ -85,8 +85,8 @@ struct MainMenuView: View {
 class MainMenuViewModel: ModalPresenter<AppScreens> {}
 
 #Preview {
-//    let navCoordinator = NavigationCoordinator<AppScreens>()
-    MainMenuView(vm: MainMenuViewModel())
+    let navCoordinator = NavigationCoordinator<AppScreens>()
+    MainMenuView(vm: MainMenuViewModel(navCoordinator: navCoordinator))
         .modelContainer(for: MemoryText.self, inMemory: true)
-//        .environment(navCoordinator)
+        .environment(navCoordinator)
 }
