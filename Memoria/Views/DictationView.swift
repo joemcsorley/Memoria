@@ -75,7 +75,10 @@ struct DictationView: View {
 }
 
 #Preview {
+    let navCoordinator = NavigationCoordinator<AppScreens>()
     let text = MemoryText(title: "Sample Text", text: "This is a sentence of sample text for the preview.")
-    return DictationView(vm: DictationViewModel(text: text, speechRecognizer: SpeechRecognizer()))
+    DictationView(vm: DictationViewModel(navCoordinator: navCoordinator, text: text, speechRecognizer: SpeechRecognizer()))
+        .modelContainer(for: MemoryText.self, inMemory: true)
+        .environment(navCoordinator)
 }
 

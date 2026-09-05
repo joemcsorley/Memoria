@@ -17,12 +17,18 @@ class DataStores {
     }
     let memoryTextStore = MemoryTextStore()
 
-    private init() {
-        set(modelContainer: modelContainer)
-    }
+    private init() {}
     
     private func set(modelContainer: ModelContainer?) {
         memoryTextStore.modelContainer = modelContainer
+    }
+    
+    func save() {
+        do {
+            try modelContainer?.mainContext.save()
+        } catch {
+            print("DataStores.save():  Error saving data")
+        }
     }
 }
 

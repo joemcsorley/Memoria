@@ -8,6 +8,7 @@
 import SwiftUI
 import SwiftData
 
+// TODO: Change the App DisplayName, and Bundle Identifier back to normal, when done testing.
 @main
 struct MemoriaApp: App {
     @State private var navCoordinator = NavigationCoordinator<AppScreens>()
@@ -20,9 +21,8 @@ struct MemoriaApp: App {
             let modelContainer = try ModelContainer(for: schema, configurations: [modelConfiguration])
             dataStores.modelContainer = modelContainer
             return modelContainer
-//            return try ModelContainer(for: schema, configurations: [modelConfiguration])
         } catch {
-            fatalError("Could not create ModelContainer: \(error)")
+            fatalError("MemoriaApp:  Could not create ModelContainer: \(error)")
         }
     }()
 

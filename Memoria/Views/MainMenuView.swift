@@ -1,23 +1,19 @@
 //
-//  ContentView.swift
+//  MainMenuView.swift
 //  Memoria
 //
 //  Created by Joseph McSorley on 12/27/23.
 //
 
 import SwiftUI
-import SwiftData
 
 struct MainMenuView: View {
     @Environment(NavigationCoordinator<AppScreens>.self) var navCoordinator
-    @Environment(\.modelContext) private var modelContext
-    @Query(sort: \MemoryText.displayOrder) private var texts: [MemoryText]
     @Bindable var vm: MainMenuViewModel
-    @State private var newText = MemoryText(title: "", text: "")
 
     var body: some View {
         List {
-            ForEach(texts) { text in
+            ForEach(vm.texts) { text in
                 Button(action: { navCoordinator.push(.dictation(text)) }) {
                     Text(text.title)
                 }
@@ -28,7 +24,9 @@ struct MainMenuView: View {
         .navigationTitle("Texts")
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
-                Button(action: { vm.presentModal(.help) }) {
+                // TODO: Set this debug hack back to rights, when done testing.
+//                Button(action: { vm.presentModal(.help) }) {
+                Button(action: { vm.texts.forEach { print($0) } }) {
                     Image(systemName: "questionmark.circle")
                 }
             }
@@ -41,48 +39,29 @@ struct MainMenuView: View {
                 }
             }
         }
+        .onAppear {
+            vm.refreshTexts()
+        }
         .modalPresenting(using: vm, navCoordinator: navCoordinator)
     }
 
     private func addNewRow() {
         withAnimation {
-            newText = MemoryText(title: "", text: "")
-            modelContext.insert(newText)
-            var i = 1
-            texts.forEach {
-                $0.displayOrder = i
-                i += 1
-            }
+            let newText = vm.addNewEmptyText()
             navCoordinator.push(.addEditText(newText, true))
         }
     }
 
     private func moveRows(source: IndexSet, destination: Int) {
-        guard let sourceIndex = source.first else { return }
-        if sourceIndex < destination {
-            texts[safe: sourceIndex]?.displayOrder = texts[safe: destination-1]?.displayOrder ?? destination
-            for i in (sourceIndex+1)..<destination {
-                texts[safe: i]?.displayOrder -= 1
-            }
-        } else {
-            texts[safe: sourceIndex]?.displayOrder = texts[safe: destination]?.displayOrder ?? destination+1
-            for i in destination..<sourceIndex {
-                texts[safe: i]?.displayOrder += 1
-            }
-        }
+        vm.reorderTexts(source: source, destination: destination)
     }
     
     private func deleteRows(offsets: IndexSet) {
         withAnimation {
-            for index in offsets {
-                modelContext.delete(texts[index])
-            }
+            vm.deleteTexts(offsets: offsets)
         }
     }
 }
-
-@Observable
-class MainMenuViewModel: ModalPresenter<AppScreens> {}
 
 #Preview {
     let navCoordinator = NavigationCoordinator<AppScreens>()

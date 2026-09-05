@@ -10,11 +10,8 @@ import SwiftData
 
 struct AddEditTextView: View {
     @Environment(NavigationCoordinator<AppScreens>.self) var navCoordinator
-    @Environment(\.modelContext) private var modelContext
     @Bindable var vm: AddEditViewModel
-    @Bindable var storedText: MemoryText
     @State private var text = MemoryText()
-    @State var isNew = false
 
     var body: some View {
         VStack {
@@ -45,44 +42,19 @@ struct AddEditTextView: View {
         .navigationBarBackButtonHidden()
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
-                Button(action: { handleCancel() }) {
+                Button(action: { vm.handleCancel() }) {
                     Text("Cancel")
                 }
             }
             ToolbarItem(placement: .navigationBarTrailing) {
-                Button(action: { handleSave() }) {
+                Button(action: { vm.handleSave(text) }) {
                     Text("Save")
                 }
             }
         }
         .onAppear {
-            text.copy(from: storedText)
+            text.copy(from: vm.textToEdit)
         }
         .modalPresenting(using: vm, navCoordinator: navCoordinator)
     }
-    
-    private func handleCancel() {
-        if isNew {
-            modelContext.delete(storedText)
-        }
-        navCoordinator.pop()
-    }
-
-    private func handleSave() {
-        if isNew {
-            let newTitle = text.title  // Can't use another model in the definition of the predicate
-            let fetchDescriptor = FetchDescriptor<MemoryText>(predicate: #Predicate { $0.title == newTitle })
-            let foundTexts = try? modelContext.fetch(fetchDescriptor)
-            guard foundTexts?.isEmpty ?? true else {
-                vm.presentAlert(AlertViewComponents(title: "Duplicate",
-                                                    message: "There is already a text entitled: \(text.title)",
-                                                    buttons: [AlertButton(id: 1, title: "Ok", role: .cancel)]))
-                return
-            }
-        }
-        storedText.copy(from: text)
-        navCoordinator.pop()
-    }
 }
-
-class AddEditViewModel: ModalPresenter<AppScreens> {}

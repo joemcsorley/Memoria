@@ -37,12 +37,12 @@ indirect enum AppScreens: @MainActor NavigationScreenDefinition {
 
     private func dictationView(memoryText: MemoryText, navCoordinator: NavigationCoordinator<Self>) -> some View {
         let speechRecognizer = SpeechRecognizer()
-        let vm = navCoordinator.observable(for: self, default: DictationViewModel(text: memoryText, speechRecognizer: speechRecognizer))
+        let vm = navCoordinator.observable(for: self, default: DictationViewModel(navCoordinator: navCoordinator, text: memoryText, speechRecognizer: speechRecognizer))
         return DictationView(vm: vm)
     }
     
     private func addEditTextView(memoryText: MemoryText, isNew: Bool, navCoordinator: NavigationCoordinator<Self>) -> some View {
-        let vm = navCoordinator.observable(for: self, default: AddEditViewModel(navCoordinator: navCoordinator))
-        return AddEditTextView(vm: vm, storedText: memoryText, isNew: isNew)
+        let vm = navCoordinator.observable(for: self, default: AddEditViewModel(navCoordinator: navCoordinator, text: memoryText, isNew: isNew))
+        return AddEditTextView(vm: vm)
     }
 }

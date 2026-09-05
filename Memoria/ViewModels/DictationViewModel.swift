@@ -8,9 +8,8 @@
 import AVFoundation
 import SwiftUI
 
-@MainActor
-@Observable
-class DictationViewModel: NSObject {
+@MainActor @Observable
+class DictationViewModel: ModalPresenter<AppScreens> {
     private(set) var masterText: MemoryText
     private var candidateText = ""
     var displayText = AttributedString("")
@@ -20,11 +19,10 @@ class DictationViewModel: NSObject {
     private var lastTranscript = ""
     private var lastTranscriptSize = 0
     
-
-    init(text: MemoryText, speechRecognizer: SpeechRecognizer) {
+    init(navCoordinator: NavigationCoordinator<AppScreens>, text: MemoryText, speechRecognizer: SpeechRecognizer) {
         self.masterText = text
         self.speechRecognizer = speechRecognizer
-        super.init()
+        super.init(navCoordinator: navCoordinator)
         // TODO: Do these need to be MainActor?
         observeIsTranscribing()
         observeTranscriptUpdates()

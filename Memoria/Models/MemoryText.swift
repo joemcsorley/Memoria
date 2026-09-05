@@ -9,10 +9,10 @@ import Foundation
 import SwiftData
 
 @Model
-final class MemoryText: Hashable {
+final class MemoryText: Hashable, Sendable, CustomStringConvertible {
     var dateAdded: Date
     var displayOrder = 0
-    @Attribute(.unique) var title: String
+    var title: String
     @Attribute(.externalStorage) var text: String
     
     init(title: String, text: String, dateAdded: Date = Date()) {
@@ -26,7 +26,7 @@ final class MemoryText: Hashable {
     }
     
     var description: String {
-        "MemoryText:  title=\(title), text=\(text), dateAdded = \(dateAdded)"
+        "<title=\(title), text=\(text), displayOrder=\(displayOrder), dateAdded = \(dateAdded)>"
     }
     
     func copy(from text: MemoryText) {
