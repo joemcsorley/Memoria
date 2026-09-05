@@ -74,8 +74,8 @@ class SpeechRecognizer {
     
     @MainActor func resetTranscript() {
         Task {
-            print("***** SpeechRecognizer.resetTranscript()  Called")
-//            reset()
+//            print("***** SpeechRecognizer.resetTranscript()  Called")
+            reset()
         }
     }
     

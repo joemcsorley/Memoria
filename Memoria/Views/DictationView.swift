@@ -23,13 +23,12 @@ struct DictationView: View {
                         .padding()
                         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
                         .id(scrollTopId)
-                    Spacer().id(scrollBottomId)
                 }
                 .background(Color.gray.opacity(0.1))
                 .clipShape(RoundedRectangle(cornerRadius: 12))
                 .onChange(of: vm.displayText) {
                     if speechRecognizer.isTranscribing {
-                        scrollViewProxy.scrollTo(scrollBottomId)
+                        scrollViewProxy.scrollTo(scrollTopId, anchor: .bottom)
                     } else {
                         scrollViewProxy.scrollTo(scrollTopId, anchor: .top)
                     }
@@ -81,4 +80,3 @@ struct DictationView: View {
         .modelContainer(for: MemoryText.self, inMemory: true)
         .environment(navCoordinator)
 }
-

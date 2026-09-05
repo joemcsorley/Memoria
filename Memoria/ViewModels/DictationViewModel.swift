@@ -23,7 +23,6 @@ class DictationViewModel: ModalPresenter<AppScreens> {
         self.masterText = text
         self.speechRecognizer = speechRecognizer
         super.init(navCoordinator: navCoordinator)
-        // TODO: Do these need to be MainActor?
         observeIsTranscribing()
         observeTranscriptUpdates()
     }
@@ -32,7 +31,6 @@ class DictationViewModel: ModalPresenter<AppScreens> {
     /// Whenever there is a momentary pause in speech, the speech recognizer will typically publish the transcript with a startTimeStamp, then clear out the transcript, and continue on.
     /// Sometimes, it doesn't publish the transcript with the startTimeStamp, however.  Therefore, there is also logic to look for a significant decrease in the size of the transcript from
     /// one update to the next, and if so, capture the otherwise "lost" transcript.
-    @MainActor
     func observeTranscriptUpdates() {
         withObservationTracking {
 //            print("***** MemoryTextViewModel.observeTranscriptUpdates()  New transcript = \(speechRecognizer.transcript.transcript)")
@@ -54,42 +52,34 @@ class DictationViewModel: ModalPresenter<AppScreens> {
                 lastTranscriptSize = lastTranscript.count
             }
         } onChange: {
-//            print("***** MemoryTextViewModel.observeTranscriptUpdates()  onChange called")
             Task { [weak self] in
                 await self?.observeTranscriptUpdates()
             }
         }
     }
 
-    @MainActor
     func observeIsTranscribing() {
         withObservationTracking {
-//            print("***** MemoryTextViewModel.observeIsTranscribing()  New value = \(speechRecognizer.isTranscribing)")
             guard !speechRecognizer.isTranscribing else { return }
             lastTranscript = ""
             lastTranscriptSize = 0
             evaluateText()
         } onChange: {
-//            print("***** MemoryTextViewModel.observeIsTranscribing()  onChange called")
             Task { [weak self] in
                 await self?.observeIsTranscribing()
             }
         }
     }
     
-    @MainActor
     func handleSpokenInput() {
-        speechRecognizer.resetTranscript()
         speechRecognizer.startTranscribing()
     }
     
-    @MainActor
     func clearText() {
         transcripts = []
         displayText = ""
     }
     
-    @MainActor
     func stopListening() {
         speechRecognizer.stopTranscribing()
     }
@@ -103,7 +93,6 @@ class DictationViewModel: ModalPresenter<AppScreens> {
         }
     }
     
-    @MainActor
     var dictationButtonTitle: String {
         if speechRecognizer.isTranscribing {
             return "Stop Dictation"

@@ -24,9 +24,7 @@ struct MainMenuView: View {
         .navigationTitle("Texts")
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
-                // TODO: Set this debug hack back to rights, when done testing.
-//                Button(action: { vm.presentModal(.help) }) {
-                Button(action: { vm.texts.forEach { print($0) } }) {
+                Button(action: { vm.presentModal(.help) }) {
                     Image(systemName: "questionmark.circle")
                 }
             }
