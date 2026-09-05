@@ -11,7 +11,6 @@ struct DictationView: View {
     @Environment(NavigationCoordinator<AppScreens>.self) var navCoordinator
     @Bindable var vm: DictationViewModel
     let scrollTopId = "MemoryTextViewScrollBottom"
-    let scrollBottomId = "MemoryTextViewScrollBottom"
     
     var body: some View {
         @Bindable var speechRecognizer = vm.speechRecognizer

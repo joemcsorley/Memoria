@@ -8,7 +8,6 @@
 import SwiftUI
 import SwiftData
 
-// TODO: Change the App DisplayName, and Bundle Identifier back to normal, when done testing.
 @main
 struct MemoriaApp: App {
     @State private var navCoordinator = NavigationCoordinator<AppScreens>()
