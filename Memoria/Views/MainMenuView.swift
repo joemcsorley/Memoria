@@ -51,7 +51,7 @@ struct MainMenuView: View {
     // MARK: - Sub-views
 
     private var headerView: some View {
-        HStack(alignment: .top, spacing: 12) {
+        HStack(alignment: .bottom, spacing: 12) {
             VStack(alignment: .leading, spacing: 2) {
                 Text("Memoria")
                     .font(.system(size: 34, weight: .semibold, design: .serif))
@@ -66,20 +66,18 @@ struct MainMenuView: View {
                         editMode = editMode == .active ? .inactive : .active
                     }
                 }
-                .font(.system(size: 15, weight: .medium))
-                .foregroundStyle(Color.codexSecondary)
-                .padding(.top, 10)
+                .font(.system(size: 17))
+                .foregroundStyle(Color.codexAccent)
+                .padding(.bottom, 6)
+                .padding(.trailing, 16)
             }
 
             Button { vm.presentModal(.help) } label: {
                 Image(systemName: "questionmark.circle")
                     .font(.system(size: 18))
-                    .foregroundStyle(Color.codexSecondary)
-                    .frame(width: 34, height: 34)
-                    .background(Color.codexSurface2)
-                    .clipShape(Circle())
+                    .foregroundStyle(Color.codexAccent)
             }
-            .padding(.top, 4)
+            .padding(.bottom, 6)
         }
         .padding(.horizontal, 22)
         .padding(.top, 18)

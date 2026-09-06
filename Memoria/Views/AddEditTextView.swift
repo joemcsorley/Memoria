@@ -6,55 +6,102 @@
 //
 
 import SwiftUI
-import SwiftData
 
 struct AddEditTextView: View {
     @Environment(NavigationCoordinator<AppScreens>.self) var navCoordinator
     @Bindable var vm: AddEditViewModel
     @State private var text = MemoryText()
+    @FocusState private var focusedField: Field?
+
+    private enum Field { case title, body }
 
     var body: some View {
-        VStack {
-            HStack {
-                Text("Date added: \(text.dateAdded, format: Date.FormatStyle(date: .numeric, time: .standard))")
-                    .font(.caption)
-                    .foregroundStyle(Color.gray)
-                Spacer()
+        ZStack {
+            Color.codexBg.ignoresSafeArea()
+
+            VStack(spacing: 0) {
+                customNavBar
+
+                VStack(alignment: .leading, spacing: 16) {
+                    titleField
+                    bodyEditor
+                }
+                .padding(.horizontal, 20)
+                .padding(.top, 20)
             }
-            .padding(.bottom, 8)
-            
-            TextField("Title", text: $text.title)
-                .disableAutocorrection(true)
-                .padding(EdgeInsets(top: 12, leading: 12, bottom: 12, trailing: 12))
-                .background(Color.gray.opacity(0.1))
-                .clipShape(RoundedRectangle(cornerRadius: 12))
-                .padding(.bottom, 8)
-            
-            TextEditor(text: $text.text)
-                .disableAutocorrection(true)
-                .scrollContentBackground(.hidden)
-                .padding(EdgeInsets(top: 12, leading: 12, bottom: 12, trailing: 12))
-                .background(Color.gray.opacity(0.1))
-                .clipShape(RoundedRectangle(cornerRadius: 12))
         }
-        .padding(EdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16))
-        .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden()
-        .toolbar {
-            ToolbarItem(placement: .navigationBarLeading) {
-                Button(action: { vm.handleCancel() }) {
-                    Text("Cancel")
-                }
-            }
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button(action: { vm.handleSave(text) }) {
-                    Text("Save")
-                }
-            }
-        }
+        .toolbar(.hidden, for: .navigationBar)
         .onAppear {
             text.copy(from: vm.textToEdit)
         }
         .modalPresenting(using: vm, navCoordinator: navCoordinator)
+    }
+
+    // MARK: - Sub-views
+
+    private var customNavBar: some View {
+        HStack {
+            Button("Cancel") { vm.handleCancel() }
+                .font(.system(size: 17))
+                .foregroundStyle(Color.codexAccent)
+
+            Spacer()
+
+            Text(vm.isNew ? "New Text" : "Editing")
+                .font(.system(size: 17, weight: .semibold))
+                .foregroundStyle(Color.codexLabel)
+
+            Spacer()
+
+            Button { vm.handleSave(text) } label: {
+                Text("Save")
+                    .font(.system(size: 17, weight: .semibold))
+                    .foregroundStyle(Color.codexAccent)
+            }
+        }
+        .padding(.horizontal, 16)
+        .frame(height: 44)
+        .overlay(alignment: .bottom) {
+            Rectangle()
+                .fill(Color.codexBorder)
+                .frame(height: 0.5)
+        }
+    }
+
+    private var titleField: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text("Added \(text.dateAdded.formatted(.dateTime.month(.wide).day().year()))")
+                .font(.system(size: 13, weight: .medium))
+                .foregroundStyle(Color.codexTertiary)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.bottom, 8)
+
+            TextField("", text: $text.title, prompt: Text("Untitled").foregroundStyle(Color.codexTertiary))
+                .font(.system(size: 20, weight: .semibold))
+                .foregroundStyle(Color.codexLabel)
+                .disableAutocorrection(true)
+                .focused($focusedField, equals: .title)
+                .padding(.bottom, 10)
+                .overlay(alignment: .bottom) {
+                    Rectangle()
+                        .fill(Color.codexBorder)
+                        .frame(height: 1.5)
+                }
+        }
+    }
+
+    private var bodyEditor: some View {
+        TextEditor(text: $text.text)
+            .font(.system(size: 16))
+            .foregroundStyle(Color.codexLabel)
+            .lineSpacing(5)
+            .disableAutocorrection(true)
+            .scrollContentBackground(.hidden)
+            .focused($focusedField, equals: .body)
+            .padding(16)
+            .background(Color.codexSurface2)
+            .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+            .frame(maxHeight: .infinity)
     }
 }
