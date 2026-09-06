@@ -9,42 +9,155 @@ import SwiftUI
 
 struct HelpView: View {
     @Environment(\.dismiss) var dismiss
-    
+
     var body: some View {
-        VStack {
-            HStack {
-                Spacer()
-                Button(action: { dismiss() }) {
-                    Text("Done")
+        ZStack {
+            Color.codexBg.ignoresSafeArea()
+
+            VStack(spacing: 0) {
+                // Done button row
+                HStack {
+                    Spacer()
+                    Button("Done") { dismiss() }
+                        .font(.system(size: 17, weight: .semibold))
+                        .foregroundStyle(Color.codexAccent)
+                        .padding(.horizontal, 20)
+                        .padding(.vertical, 14)
                 }
-                .padding()
+
+                ScrollView {
+                    VStack(spacing: 0) {
+                        // Hero
+                        VStack(spacing: 8) {
+                            Text("Memoria")
+                                .font(.system(size: 42, weight: .semibold, design: .serif))
+                                .foregroundStyle(Color.codexAccent)
+                            Text("Master anything you want to remember.")
+                                .font(.system(size: 16))
+                                .foregroundStyle(Color.codexSecondary)
+                                .multilineTextAlignment(.center)
+                        }
+                        .padding(.horizontal, 28)
+                        .padding(.top, 16)
+                        .padding(.bottom, 24)
+
+                        // Step cards
+                        VStack(spacing: 12) {
+                            StepCard(
+                                systemImage: "plus",
+                                title: "Add your text",
+                                description: "Paste any passage you want to memorize and give it a title."
+                            )
+
+                            StepCard(
+                                systemImage: "mic.fill",
+                                title: "Speak it aloud",
+                                description: "Tap **Begin Dictation** and recite what you remember. Speak naturally."
+                            )
+
+                            StepCard(
+                                systemImage: "chart.line.uptrend.xyaxis",
+                                title: "Read the feedback",
+                                description: "Each word is color-coded after you finish."
+                            ) {
+                                HStack(spacing: 6) {
+                                    ColorChip(label: "Correct", foreground: .codexCorrect, background: .codexCorrectBg)
+                                    ColorChip(label: "Missed",  foreground: .codexMissed,  background: .codexMissedBg)
+                                    ColorChip(label: "Extra",   foreground: .codexExtra,   background: .codexExtraBg)
+                                }
+                                .padding(.top, 6)
+                            }
+                        }
+                        .padding(.horizontal, 18)
+
+                        // Footer
+                        Text("Practice repeatedly to see your memory improve over time.")
+                            .font(.system(size: 13))
+                            .foregroundStyle(Color.codexTertiary)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal, 28)
+                            .padding(.top, 28)
+                            .padding(.bottom, 40)
+                    }
+                }
             }
-            ScrollView {
-                helpText
-                    .padding()
-                    .frame(maxWidth: .infinity, alignment: .topLeading)
-            }
-            .background(Color.gray.opacity(0.1))
-            .clipShape(RoundedRectangle(cornerRadius: 12))
-            .padding()
         }
     }
-    
-    private var helpText: some View {
-        Text("Memoria ").font(.largeTitle).foregroundStyle(Color.orange) +
-        Text("will help you memorize texts by allowing you to speak them out loud, then reporting your accuracy.\n\n") +
-        Text("Start by adding texts you wish to memorize.  Tap the ") +
-        Text("\(Image(systemName: "plus"))").foregroundStyle(Color.blue) +
-        Text(" button, then enter a title for the text, and the text itself.\n") +
-        Text("Hint: You can copy texts from other sources, and simply paste them into Memoria.\n\n").font(.footnote).foregroundStyle(Color.gray) +
-        Text("Once your text is entered, then tap on it from the main menu. This will take you to the dictation screen, where you can begin speaking!\n\n") +
-        Text("When you're done speaking the text, Memoria will display the original text with highlights:\n") +
-        Text("• Green").foregroundStyle(Color.green) + 
-        Text(": Words you spoke correctly.\n") +
-        Text("• Red").foregroundStyle(Color.red) +
-        Text(": Words you missed.\n") +
-        Text("• Amber").foregroundStyle(Color.orange) +
-        Text(": Words you spoke that were not in the original text.")
+}
+
+// MARK: - Step card
+
+private struct StepCard<Legend: View>: View {
+    let systemImage: String
+    let title: String
+    let description: String
+    @ViewBuilder var legend: Legend
+
+    init(systemImage: String,
+         title: String,
+         description: String,
+         @ViewBuilder legend: () -> Legend = { EmptyView() }) {
+        self.systemImage = systemImage
+        self.title = title
+        self.description = description
+        self.legend = legend()
+    }
+
+    var body: some View {
+        HStack(alignment: .top, spacing: 14) {
+            // Icon well
+            ZStack {
+                RoundedRectangle(cornerRadius: 14, style: .continuous)
+                    .fill(Color.codexAccentTint)
+                    .frame(width: 46, height: 46)
+                Image(systemName: systemImage)
+                    .font(.system(size: 20, weight: .medium))
+                    .foregroundStyle(Color.codexAccent)
+            }
+            .padding(.top, 1)
+
+            VStack(alignment: .leading, spacing: 4) {
+                Text(title)
+                    .font(.system(size: 15, weight: .semibold))
+                    .foregroundStyle(Color.codexLabel)
+                Text(LocalizedStringKey(description))
+                    .font(.system(size: 13.5))
+                    .foregroundStyle(Color.codexSecondary)
+                    .fixedSize(horizontal: false, vertical: true)
+                legend
+            }
+        }
+        .padding(16)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Color.codexSurface)
+        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .overlay(
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .strokeBorder(Color.codexBorder, lineWidth: 1)
+        )
+    }
+}
+
+// MARK: - Color chip
+
+private struct ColorChip: View {
+    let label: String
+    let foreground: Color
+    let background: Color
+
+    var body: some View {
+        HStack(spacing: 5) {
+            Circle()
+                .fill(foreground)
+                .frame(width: 7, height: 7)
+            Text(label)
+                .font(.system(size: 12, weight: .medium))
+        }
+        .foregroundStyle(foreground)
+        .padding(.vertical, 3)
+        .padding(.horizontal, 9)
+        .background(background)
+        .clipShape(Capsule())
     }
 }
 

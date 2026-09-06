@@ -33,7 +33,6 @@ class DictationViewModel: ModalPresenter<AppScreens> {
     /// one update to the next, and if so, capture the otherwise "lost" transcript.
     func observeTranscriptUpdates() {
         withObservationTracking {
-//            print("***** MemoryTextViewModel.observeTranscriptUpdates()  New transcript = \(speechRecognizer.transcript.transcript)")
             guard speechRecognizer.isTranscribing else { return }
             if speechRecognizer.transcript.startTimeStamp != nil {
                 transcripts.append(speechRecognizer.transcript.transcript)

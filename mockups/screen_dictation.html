@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Memoria — Dictation</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+body { display: flex; flex-direction: column; align-items: center; padding: 48px 24px 80px; gap: 40px; }
+
+.page-header { text-align: center; }
+.page-header h1 { font-family: ui-serif, Georgia, serif; font-size: 32px; font-weight: 600; color: #F0EAE1; letter-spacing: -.5px; }
+.page-header p { font-size: 13px; color: #988E83; margin-top: 4px; letter-spacing: 1.5px; text-transform: uppercase; }
+
+.phone-pair { display: flex; gap: 48px; align-items: flex-start; }
+.phone-col { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+.mode-label { font-size: 12px; color: #988E83; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 500; }
+
+.screen-nav { display: flex; gap: 0; justify-content: center; flex-wrap: wrap; }
+.screen-nav a {
+  padding: 8px 18px; font-size: 13px; color: #988E83; text-decoration: none;
+  border: 1px solid #302C26; margin: -1px 0 0 -1px; background: transparent;
+  transition: color .15s, background .15s; font-family: -apple-system, sans-serif;
+}
+.screen-nav a:first-child { border-radius: 8px 0 0 8px; }
+.screen-nav a:last-child { border-radius: 0 8px 8px 0; }
+.screen-nav a:hover { color: #D4930A; background: rgba(212,147,10,.08); }
+.screen-nav a.current { color: #D4930A; }
+
+/* Screen layout */
+.dictation-body {
+  flex: 1;
+  padding: 14px 16px 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  overflow: hidden;
+}
+
+.practice-text-box {
+  flex: 1;
+  background: var(--surface2);
+  border-radius: 16px;
+  padding: 18px 16px;
+  font-size: 17px;
+  line-height: 1.75;
+  color: var(--text1);
+  overflow-y: auto;
+  min-height: 360px;
+}
+.practice-text-box::-webkit-scrollbar { display: none; }
+
+/* Accuracy ring */
+.ring-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 4px 0;
+}
+.ring-svg-wrap { position: relative; width: 80px; height: 80px; }
+.ring-svg-wrap svg { display: block; }
+.ring-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.ring-pct {
+  font-family: ui-rounded, -apple-system, sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text1);
+  line-height: 1;
+}
+.ring-label { font-size: 10px; color: var(--text2); text-transform: uppercase; letter-spacing: .5px; margin-top: 1px; }
+
+.ring-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.ring-stat {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+}
+.ring-stat-dot {
+  width: 10px; height: 10px;
+  border-radius: 5px;
+  flex-shrink: 0;
+}
+.ring-stat-dot.correct { background: var(--correct); }
+.ring-stat-dot.missed  { background: var(--missed);  }
+.ring-stat-dot.extra   { background: var(--extra);   }
+.ring-stat-label { color: var(--text2); }
+.ring-stat-count { color: var(--text1); font-weight: 600; margin-left: auto; }
+
+/* State tabs (shows 3 button states side by side in one screen) */
+.btn-states-label {
+  font-size: 11px;
+  color: var(--text3);
+  text-align: center;
+  letter-spacing: .5px;
+  text-transform: uppercase;
+}
+
+/* Button pulse during recording */
+.light { --record-glow: rgba(214, 59, 59, .35); }
+.dark  { --record-glow: rgba(232, 69, 69, .35); }
+
+@keyframes btn-pulse {
+  0%, 100% { transform: scale(1);     box-shadow: 0 0 0 0   var(--record-glow); }
+  50%      { transform: scale(1.013); box-shadow: 0 0 0 14px rgba(0,0,0,0); }
+}
+.dictation-btn.recording { animation: btn-pulse 1.8s ease-in-out infinite; }
+
+/* Nav bar two trailing buttons */
+.nav-actions { display: flex; gap: 18px; }
+</style>
+</head>
+<body>
+
+<header class="page-header">
+  <h1>Memoria</h1>
+  <p>Codex Design System</p>
+</header>
+
+<nav class="screen-nav">
+  <a href="index.html">Gallery</a>
+  <a href="screen_main_menu.html">Main Menu</a>
+  <a href="screen_add_edit.html">Add / Edit</a>
+  <a href="screen_dictation.html" class="current">Dictation</a>
+  <a href="screen_help.html">Help</a>
+</nav>
+
+<div class="phone-pair">
+
+  <!-- ── LIGHT — post-session with results ── -->
+  <div class="phone-col">
+    <span class="mode-label">Light Mode</span>
+    <div class="phone-frame">
+      <div class="phone-screen light">
+        <div class="dynamic-island"></div>
+
+        <div class="status-bar">
+          <span class="status-time">9:41</span>
+          <div class="status-icons">
+            <svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="7" width="3" height="5" rx="1" opacity=".35"/><rect x="4.5" y="5" width="3" height="7" rx="1" opacity=".5"/><rect x="9" y="3" width="3" height="9" rx="1" opacity=".75"/><rect x="13.5" y="0" width="3" height="12" rx="1"/></svg>
+            <svg width="16" height="12" viewBox="0 0 16 12" fill="currentColor"><path d="M8 9.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3z"/><path d="M3.5 6.5a6.5 6.5 0 019 0" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" opacity=".75"/><path d="M1 4a9.5 9.5 0 0114 0" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" opacity=".5"/></svg>
+            <svg width="25" height="12" viewBox="0 0 25 12" fill="currentColor"><rect x="0" y="1" width="21" height="10" rx="3" stroke="currentColor" stroke-width="1.2" fill="none"/><rect x="22" y="3.5" width="2.5" height="5" rx="1.2"/><rect x="1.5" y="2.5" width="14" height="7" rx="1.5"/></svg>
+          </div>
+        </div>
+
+        <div class="nav-bar">
+          <span class="nav-back">
+            <svg width="11" height="18" viewBox="0 0 11 18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 1.5L1.5 9l8 7.5"/></svg>
+            Texts
+          </span>
+          <span class="nav-title">Gettysburg Address</span>
+          <div class="nav-actions">
+            <span class="nav-action">Edit</span>
+          </div>
+        </div>
+
+        <div class="dictation-body">
+          <!-- Passage text with highlights -->
+          <div class="practice-text-box">
+            <span class="w-correct">Four</span> <span class="w-correct">score</span> and <span class="w-correct">seven</span> <span class="w-correct">years</span> <span class="w-missed">ago</span> <span class="w-correct">our</span> <span class="w-missed">fathers</span> <span class="w-extra">[folks]</span> <span class="w-correct">brought</span> <span class="w-correct">forth</span> on <span class="w-correct">this</span> <span class="w-correct">continent</span> a <span class="w-correct">new</span> <span class="w-correct">nation,</span> <span class="w-correct">conceived</span> in <span class="w-correct">liberty,</span> and <span class="w-correct">dedicated</span> to the <span class="w-correct">proposition</span> <span class="w-missed">that</span> <span class="w-missed">all</span> men <span class="w-correct">are</span> <span class="w-correct">created</span> <span class="w-correct">equal.</span>
+          </div>
+
+          <!-- Dictation button — continue state -->
+          <button class="dictation-btn continue">
+            <svg width="18" height="22" viewBox="0 0 18 22" fill="currentColor">
+              <rect x="5.5" y="1" width="7" height="13" rx="3.5"/>
+              <path d="M1 10c0 4.42 3.58 8 8 8s8-3.58 8-8" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+              <line x1="9" y1="18" x2="9" y2="21" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+            Continue Dictation
+          </button>
+        </div>
+
+        <div class="home-indicator"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── DARK — active recording state ── -->
+  <div class="phone-col">
+    <span class="mode-label">Dark Mode</span>
+    <div class="phone-frame">
+      <div class="phone-screen dark">
+        <div class="dynamic-island"></div>
+
+        <div class="status-bar">
+          <span class="status-time">9:41</span>
+          <div class="status-icons">
+            <svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="7" width="3" height="5" rx="1" opacity=".35"/><rect x="4.5" y="5" width="3" height="7" rx="1" opacity=".5"/><rect x="9" y="3" width="3" height="9" rx="1" opacity=".75"/><rect x="13.5" y="0" width="3" height="12" rx="1"/></svg>
+            <svg width="16" height="12" viewBox="0 0 16 12" fill="currentColor"><path d="M8 9.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3z"/><path d="M3.5 6.5a6.5 6.5 0 019 0" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" opacity=".75"/><path d="M1 4a9.5 9.5 0 0114 0" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" opacity=".5"/></svg>
+            <svg width="25" height="12" viewBox="0 0 25 12" fill="currentColor"><rect x="0" y="1" width="21" height="10" rx="3" stroke="currentColor" stroke-width="1.2" fill="none"/><rect x="22" y="3.5" width="2.5" height="5" rx="1.2"/><rect x="1.5" y="2.5" width="14" height="7" rx="1.5"/></svg>
+          </div>
+        </div>
+
+        <div class="nav-bar">
+          <span class="nav-back">
+            <svg width="11" height="18" viewBox="0 0 11 18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 1.5L1.5 9l8 7.5"/></svg>
+            Texts
+          </span>
+          <span class="nav-title">Gettysburg Address</span>
+          <div class="nav-actions">
+            <span class="nav-action">Edit</span>
+          </div>
+        </div>
+
+        <div class="dictation-body">
+          <!-- Text area — plain during recording -->
+          <div class="practice-text-box">
+            Four score and seven years ago our fathers brought forth on this continent a new nation, conceived in liberty, and dedicated to the proposition that all men are created equal.
+
+            <span style="color:var(--text3)">Now we are engaged in a great civil war, testing whether that nation, or any nation so conceived and so dedicated, can long endure.</span>
+          </div>
+
+          <!-- Dictation button — stop/recording state (pulses to signal active recording) -->
+          <button class="dictation-btn recording">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="currentColor">
+              <rect x="2" y="2" width="14" height="14" rx="3"/>
+            </svg>
+            Stop Recording
+          </button>
+        </div>
+
+        <div class="home-indicator"></div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- phone-pair -->
+
+<!-- Second pair showing Begin state -->
+<div class="phone-pair" style="margin-top: 16px;">
+
+  <!-- Ready/Begin state (light) -->
+  <div class="phone-col">
+    <span class="mode-label" style="color:#5A5450; font-size:11px;">↑ Post-session &nbsp;·&nbsp; Begin state ↓</span>
+  </div>
+  <div class="phone-col"></div>
+
+</div>
+
+<div class="phone-pair">
+  <div class="phone-col">
+    <span class="mode-label">Light — Begin State</span>
+    <div class="phone-frame">
+      <div class="phone-screen light">
+        <div class="dynamic-island"></div>
+        <div class="status-bar">
+          <span class="status-time">9:41</span>
+          <div class="status-icons">
+            <svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="7" width="3" height="5" rx="1" opacity=".35"/><rect x="4.5" y="5" width="3" height="7" rx="1" opacity=".5"/><rect x="9" y="3" width="3" height="9" rx="1" opacity=".75"/><rect x="13.5" y="0" width="3" height="12" rx="1"/></svg>
+            <svg width="16" height="12" viewBox="0 0 16 12" fill="currentColor"><path d="M8 9.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3z"/><path d="M3.5 6.5a6.5 6.5 0 019 0" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" opacity=".75"/><path d="M1 4a9.5 9.5 0 0114 0" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" opacity=".5"/></svg>
+            <svg width="25" height="12" viewBox="0 0 25 12" fill="currentColor"><rect x="0" y="1" width="21" height="10" rx="3" stroke="currentColor" stroke-width="1.2" fill="none"/><rect x="22" y="3.5" width="2.5" height="5" rx="1.2"/><rect x="1.5" y="2.5" width="14" height="7" rx="1.5"/></svg>
+          </div>
+        </div>
+        <div class="nav-bar">
+          <span class="nav-back"><svg width="11" height="18" viewBox="0 0 11 18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 1.5L1.5 9l8 7.5"/></svg>Texts</span>
+          <span class="nav-title">Hamlet — Act III</span>
+          <span class="nav-action">Edit</span>
+        </div>
+        <div class="dictation-body">
+          <div class="practice-text-box">
+            To be, or not to be — that is the question: Whether 'tis nobler in the mind to suffer the slings and arrows of outrageous fortune, or to take arms against a sea of troubles and by opposing end them.
+          </div>
+          <div style="height:16px;"></div>
+          <button class="dictation-btn ready">
+            <svg width="18" height="22" viewBox="0 0 18 22" fill="currentColor"><rect x="5.5" y="1" width="7" height="13" rx="3.5"/><path d="M1 10c0 4.42 3.58 8 8 8s8-3.58 8-8" stroke="white" stroke-width="1.8" fill="none" stroke-linecap="round"/><line x1="9" y1="18" x2="9" y2="21" stroke="white" stroke-width="1.8" stroke-linecap="round"/></svg>
+            Begin Dictation
+          </button>
+        </div>
+        <div class="home-indicator"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="phone-col">
+    <span class="mode-label">Dark — Begin State</span>
+    <div class="phone-frame">
+      <div class="phone-screen dark">
+        <div class="dynamic-island"></div>
+        <div class="status-bar">
+          <span class="status-time">9:41</span>
+          <div class="status-icons">
+            <svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="7" width="3" height="5" rx="1" opacity=".35"/><rect x="4.5" y="5" width="3" height="7" rx="1" opacity=".5"/><rect x="9" y="3" width="3" height="9" rx="1" opacity=".75"/><rect x="13.5" y="0" width="3" height="12" rx="1"/></svg>
+            <svg width="16" height="12" viewBox="0 0 16 12" fill="currentColor"><path d="M8 9.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3z"/><path d="M3.5 6.5a6.5 6.5 0 019 0" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" opacity=".75"/><path d="M1 4a9.5 9.5 0 0114 0" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" opacity=".5"/></svg>
+            <svg width="25" height="12" viewBox="0 0 25 12" fill="currentColor"><rect x="0" y="1" width="21" height="10" rx="3" stroke="currentColor" stroke-width="1.2" fill="none"/><rect x="22" y="3.5" width="2.5" height="5" rx="1.2"/><rect x="1.5" y="2.5" width="14" height="7" rx="1.5"/></svg>
+          </div>
+        </div>
+        <div class="nav-bar">
+          <span class="nav-back"><svg width="11" height="18" viewBox="0 0 11 18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 1.5L1.5 9l8 7.5"/></svg>Texts</span>
+          <span class="nav-title">Hamlet — Act III</span>
+          <span class="nav-action">Edit</span>
+        </div>
+        <div class="dictation-body">
+          <div class="practice-text-box">
+            To be, or not to be — that is the question: Whether 'tis nobler in the mind to suffer the slings and arrows of outrageous fortune, or to take arms against a sea of troubles and by opposing end them.
+          </div>
+          <div style="height:16px;"></div>
+          <button class="dictation-btn ready">
+            <svg width="18" height="22" viewBox="0 0 18 22" fill="currentColor"><rect x="5.5" y="1" width="7" height="13" rx="3.5"/><path d="M1 10c0 4.42 3.58 8 8 8s8-3.58 8-8" stroke="white" stroke-width="1.8" fill="none" stroke-linecap="round"/><line x1="9" y1="18" x2="9" y2="21" stroke="white" stroke-width="1.8" stroke-linecap="round"/></svg>
+            Begin Dictation
+          </button>
+        </div>
+        <div class="home-indicator"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
